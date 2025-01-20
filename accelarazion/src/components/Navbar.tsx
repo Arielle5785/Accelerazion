@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
   const handleLogout = async (): Promise<void> => {
     try {
       await axios.post(
-        `${apiBaseUrl}/api/user/logout`,
+        `${apiBaseUrl}/api/logout`,
         {},
         { withCredentials: true }
       );

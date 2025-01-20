@@ -5,35 +5,69 @@ require("dotenv").config();
 
 module.exports = {
   registerUser: async (req, res) => {
-    const { username, password, email } = req.body;
-    console.log(username, password, email);
-    
-    if (!username || !password || !email) {
-      return res.status(400).json({
-        message: "All fields (username, email, password) are required",
-      });
-    }
+        const {
+            firstName,
+            lastName,
+            gender,
+            email,
+            currentCountry,
+            phoneCode,
+            phoneNumber,
+            currentJobTitle,
+            currentCompany,
+            linkedinProfile,
+            githubProfile,
+            commitAlyah,
+            dob,
+            israelJob,
+            password,
+            languages,
+        } = req.body;
 
-    try {
-      const user = await userModel.createUser(username, email, password);
-      res.status(201).json({
-        message: "User registered successfully",
-        user,
-      });
-    } catch (error) {
-      console.log(error);
-      if (error.code === "23505") {
-        res.status(400).json({
-          message: "Email already exists",
-        });
-        return;
-      } else {
-        res.status(500).json({
-          message: "Internal server error",
-        });
-      }
-    }
-  },
+        if (!password || !email || !firstName || !lastName) {
+            return res.status(400).json({
+                message: "Required fields are missing",
+            });
+        }
+
+        try {
+            const userData = {
+                firstName,
+                lastName,
+                gender,
+                email,
+                currentCountry,
+                phoneCode,
+                phoneNumber,
+                currentJobTitle,
+                currentCompany,
+                linkedinProfile,
+                githubProfile,
+                commitAlyah,
+                dob,
+                israelJob,
+                password,
+                languages,
+            };
+
+            const user = await userModel.createUser(userData);
+            res.status(201).json({
+                message: "User registered successfully",
+                user,
+            });
+        } catch (error) {
+            console.error(error);
+            if (error.code === "23505") {
+                res.status(400).json({
+                    message: "Email already exists",
+                });
+            } else {
+                res.status(500).json({
+                    message: "Internal server error",
+                });
+            }
+        }
+    },
   loginUser: async (req, res) => {
     const { email,password } = req.body;
     console.log(password,email);
@@ -70,7 +104,7 @@ module.exports = {
       /** response to client */
       res.status(200).json({
         message: "Login Successfully",
-        user: { userid: user.id, username: user.username, email: user.email },
+        user: { userid: user.id, email: user.email },
         token: accessToken,
       });
     } catch (error) {

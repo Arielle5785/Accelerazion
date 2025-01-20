@@ -15,7 +15,7 @@ const App: React.FC = () => {
         <UserProfile />
         <main className="container">
           <Routes>
-            <Route path="/" element={<h2>Welcome to the stories</h2>} />
+            <Route path="/" element={<h2>Welcome to AcceleraZion</h2>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route

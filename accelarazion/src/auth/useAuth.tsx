@@ -12,7 +12,6 @@ const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL;
 // Define types for Auth Context
 interface User {
   id: string;
-  username: string;
   email: string;
 }
 
@@ -62,7 +61,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const refreshAuth = async (): Promise<void> => {
     try {
-      const response = await axios.get(`${apiBaseUrl}/api/user/auth`, {
+      const response = await axios.get(`${apiBaseUrl}/api/auth`, {
         withCredentials: true,
       });
       const { user, token } = response.data;
