@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar"
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Register_2 from "./components/Register_2";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from "./components/UserProfile";
@@ -18,6 +19,7 @@ const App: React.FC = () => {
             <Route path="/" element={<h2>Welcome to AcceleraZion</h2>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/register/skills" element={<Register_2 />} />
             <Route
               path="/dashboard"
               element={

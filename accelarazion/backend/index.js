@@ -40,12 +40,12 @@ app.get("*", (req, res) => {
 });
 
 
-async function testConnection() {
-  try {
-    const response = await db.raw("select version()");
-    console.log(response.rows);
-  } catch (error) {
-    console.log(error);
-  }
-}
-testConnection()
+// async function testConnection() {
+//   try {
+//     const response = await db.raw("select version()");
+//     console.log(response.rows);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+// testConnection()

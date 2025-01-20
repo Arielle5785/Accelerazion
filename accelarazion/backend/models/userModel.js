@@ -8,14 +8,22 @@ module.exports = {
       // Hash the password
       const hashPassword = await bcrypt.hash(userData.password + "", 10);
 
-      // Get `current_country` and `phone_code` from the `countries` table
       const country = await trx("countries")
         .select("country_name", "phone_code")
-        .where("id", userData.currentCountryId)
+        .where("country_name", userData.currentCountry) // Use country_name instead of id
         .first();
 
       if (!country) {
-        throw new Error("Invalid country ID");
+        throw new Error("Invalid country name");
+      }
+
+      const userType = await trx("type_users")
+        .select("id")
+        .where("type", userData.userType)
+        .first();
+
+      if (!userType) {
+        throw new Error("Invalid user type");
       }
 
       // Insert the user data into the `users` table
@@ -66,6 +74,12 @@ module.exports = {
         }
       }
 
+      // Insert into user_class
+      await trx("user_class").insert({
+        user_id: user.id,
+        type_id: userType.id,
+      });
+
       await trx.commit();
       return user;
     } catch (error) {
@@ -74,6 +88,68 @@ module.exports = {
       throw error;
     }
   },
+
+  getCountries: async () => {
+    try {
+      const countries = await db("countries").select("id", "country_name", "phone_code");
+      return countries;
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+      throw error;
+    }
+  },
+
+  getLanguages: async () => {
+    try {
+      const languages = await db("languages").select("id", "language_name");
+      return languages;
+    } catch (error) {
+      console.error("Error fetching languages:", error);
+      throw error;
+    }
+  },
+
+  getLanguageLevels: async () => {
+    try {
+      const levels = await db("languages_level").select("id", "level");
+      return levels;
+    } catch (error) {
+      console.error("Error fetching language levels:", error);
+      throw error;
+    }
+  },
+  getUserTypes: async () => {
+  try {
+    const userTypes = await db("type_users").select("id", "type");
+    return userTypes;
+  } catch (error) {
+    console.error("Error fetching user types:", error);
+    throw error;
+  }
+  },
+  getSkills: async () => {
+  try {
+    const skills = await db("skills").select("id", "skill_name", "category_skills");
+    return skills;
+  } catch (error) {
+    console.error("Error fetching skills:", error);
+    throw error;
+  }
+  },
+
+  addUserSkills: async (userId, skillIds) => {
+  try {
+    const userSkills = skillIds.map((skillId) => ({
+      user_id: userId,
+      skill_id: skillId,
+    }));
+    await db("user_skills").insert(userSkills);
+  } catch (error) {
+    console.error("Error saving user skills:", error);
+    throw error;
+  }
+},
+
 
   getUserByEmail: async (email) => {
     try {
@@ -96,4 +172,44 @@ module.exports = {
       throw error;
     }
   },
+  createJobAd: async (jobData) => {
+  const [job] = await db("job_ads").insert(jobData, ["id"]);
+  return job;
+},
+
+addJobSkills: async (jobId, skillIds) => {
+  const jobSkills = skillIds.map((skillId) => ({
+    job_id: jobId,
+    skill_id: skillId,
+  }));
+  await db("job_skills").insert(jobSkills);
+},
+getAllJobAds: async () => {
+  try {
+    const jobAds = await db("job_ads as j")
+      .join("users as u", "j.sponsor_id", "u.id")
+      .leftJoin("job_skills as js", "j.id", "js.job_id")
+      .leftJoin("skills as s", "js.skill_id", "s.id")
+      .select(
+        "j.id as job_id",
+        "j.job_title",
+        "j.job_company",
+        "j.job_url",
+        "j.created_date",
+        "j.deadline",
+        "u.first_name as sponsor_first_name",
+        "u.last_name as sponsor_last_name",
+        "u.email as sponsor_email",
+        "u.phone_number as sponsor_phone",
+        db.raw("json_agg(s.skill_name) as required_skills")
+      )
+      .groupBy("j.id", "u.id");
+
+    return jobAds;
+  } catch (error) {
+    console.error("Error fetching job ads:", error);
+    throw error;
+  }
+},
+
 };

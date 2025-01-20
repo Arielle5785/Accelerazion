@@ -1,4 +1,4 @@
-import { useState, FormEvent, useEffect} from "react";
+import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -24,27 +24,36 @@ const Register: React.FC = () => {
     dob: "",
     israelJob: "",
     password: "",
+    userType: "", // Dropdown for Mentee, Mentor, etc.
     languages: [{ language: "", level: "" }],
   });
 
   const [countries, setCountries] = useState<any[]>([]);
   const [languages, setLanguages] = useState<any[]>([]);
   const [languageLevels, setLanguageLevels] = useState<any[]>([]);
+  const [userTypes, setUserTypes] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
 
   // Fetch dropdown data
   const fetchDropdownData = async () => {
     try {
-      const countriesRes = await axios.get(`${apiBaseUrl}/api/countries`);
-      const languagesRes = await axios.get(`${apiBaseUrl}/api/languages`);
-      const levelsRes = await axios.get(`${apiBaseUrl}/api/language-levels`);
-      setCountries(countriesRes.data);
-      setLanguages(languagesRes.data);
-      setLanguageLevels(levelsRes.data);
-    } catch (err) {
-      console.error("Error fetching dropdown data", err);
+      const countriesResponse = await axios.get(`${apiBaseUrl}/api/countries`);
+      const languagesResponse = await axios.get(`${apiBaseUrl}/api/languages`);
+      const levelsResponse = await axios.get(`${apiBaseUrl}/api/languages-level`);
+      const typesResponse = await axios.get(`${apiBaseUrl}/api/type-users`);
+
+      setCountries(countriesResponse.data);
+      setLanguages(languagesResponse.data);
+      setLanguageLevels(levelsResponse.data);
+      setUserTypes(typesResponse.data);
+    } catch (error) {
+      console.error("Error fetching dropdown data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchDropdownData();
+  }, []);
 
   // Add a new language entry
   const addLanguage = () => {
@@ -55,11 +64,14 @@ const Register: React.FC = () => {
   };
 
   // Handle form input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      const newValue = e.target instanceof HTMLInputElement && e.target.type === "checkbox"
-    ? e.target.checked
-    : value;
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const newValue =
+      e.target instanceof HTMLInputElement && e.target.type === "checkbox"
+        ? e.target.checked
+        : value;
 
     setFormData({
       ...formData,
@@ -81,17 +93,16 @@ const Register: React.FC = () => {
     setError("");
 
     try {
-      await axios.post(`${apiBaseUrl}/api/register`, formData, { withCredentials: true });
-      navigate("/dashboard");
+      const response = await axios.post(`${apiBaseUrl}/api/register`, formData, {
+      withCredentials: true,
+    });
+    const userId = response.data.user.id; // Assuming backend returns user.id
+    return userId;
     } catch (err: any) {
-      setError(err.response?.data?.message || "Registration failed");
+    setError(err.response?.data?.message || "Registration failed");
+    throw err;
     }
   };
-
-  // Fetch dropdown data on mount
-  useEffect(() => {
-    fetchDropdownData();
-  }, []);
 
   return (
     <div className="auth-form-container">
@@ -114,31 +125,71 @@ const Register: React.FC = () => {
             <option value="other">Other</option>
           </select>
         </div>
+        <div className="form-group">
+          <label>Email</label>
+          <input name="email" type="email" value={formData.email} onChange={handleChange} required />
+        </div>
+
+        {/* User Type */}
+        <div className="form-group">
+          <label>User Type</label>
+          <select name="userType" value={formData.userType} onChange={handleChange} required>
+            <option value="">Select Type</option>
+            {Array.isArray(userTypes) &&
+              userTypes.map((type) => (
+                <option key={type.id} value={type.type}>
+                  {type.type}
+                </option>
+              ))}
+          </select>
+        </div>
 
         {/* Contact Info */}
         <div className="form-group">
           <label>Current Country</label>
           <select name="currentCountry" value={formData.currentCountry} onChange={handleChange}>
-            {countries.map((country) => (
-              <option key={country.id} value={country.country_name}>
-                {country.country_name}
-              </option>
-            ))}
+            {Array.isArray(countries) &&
+              countries.map((country) => (
+                <option key={country.id} value={country.country_name}>
+                  {country.country_name}
+                </option>
+              ))}
           </select>
         </div>
         <div className="form-group">
           <label>Phone Code</label>
           <select name="phoneCode" value={formData.phoneCode} onChange={handleChange}>
-            {countries.map((country) => (
-              <option key={country.id} value={country.phone_code}>
-                {country.phone_code}
-              </option>
-            ))}
+            {Array.isArray(countries) &&
+              countries.map((country) => (
+                <option key={country.id} value={country.phone_code}>
+                  {country.phone_code}
+                </option>
+              ))}
           </select>
         </div>
         <div className="form-group">
           <label>Phone Number</label>
           <input name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
+        </div>
+
+        {/* Job Information */}
+        <div className="form-group">
+          <label>Current Job Title</label>
+          <input
+            name="currentJobTitle"
+            value={formData.currentJobTitle}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Current Company</label>
+          <input
+            name="currentCompany"
+            value={formData.currentCompany}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         {/* Social Profiles */}
@@ -151,15 +202,15 @@ const Register: React.FC = () => {
           <input name="githubProfile" value={formData.githubProfile} onChange={handleChange} />
         </div>
 
-        {/* CV Upload */}
-        <div className="form-group">
-          <p>Please upload your CV directly in the following drive: [Drive Link]</p>
-        </div>
-
         {/* Commitment */}
         <div className="form-group">
           <label>Commit to Alyah</label>
-          <input type="checkbox" name="commitAlyah" checked={formData.commitAlyah} onChange={handleChange} />
+          <input
+            type="checkbox"
+            name="commitAlyah"
+            checked={formData.commitAlyah}
+            onChange={handleChange}
+          />
         </div>
 
         {/* Date of Birth */}
@@ -188,22 +239,24 @@ const Register: React.FC = () => {
               value={lang.language}
               onChange={(e) => handleLanguageChange(index, "language", e.target.value)}
             >
-              {languages.map((language) => (
-                <option key={language.id} value={language.language_name}>
-                  {language.language_name}
-                </option>
-              ))}
+              {Array.isArray(languages) &&
+                languages.map((language) => (
+                  <option key={language.id} value={language.language_name}>
+                    {language.language_name}
+                  </option>
+                ))}
             </select>
             <label>Level</label>
             <select
               value={lang.level}
               onChange={(e) => handleLanguageChange(index, "level", e.target.value)}
             >
-              {languageLevels.map((level) => (
-                <option key={level.id} value={level.level}>
-                  {level.level}
-                </option>
-              ))}
+              {Array.isArray(languageLevels) &&
+                languageLevels.map((level) => (
+                  <option key={level.id} value={level.level}>
+                    {level.level}
+                  </option>
+                ))}
             </select>
           </div>
         ))}
@@ -212,13 +265,25 @@ const Register: React.FC = () => {
         </button>
 
         {/* Buttons */}
-        <div className="form-actions">
-          <button type="submit">Save</button>
-          <button type="button" onClick={() => navigate("/add-skills")}>
+       <div className="form-actions">
+        <button type="submit">Save</button>
+        <button
+            type="button"
+            onClick={async (e) => {
+            e.preventDefault();
+            try {
+                const response = await handleSubmit(e); // Save form data and get userId
+                // if (response) {
+                navigate(`/register/skills?userId=${response}`); // Redirect to skills page
+                // }
+            } catch (error) {
+                console.error("Error navigating to Add Skills:", error);
+            }
+            }}
+        >
             Add Skills
-          </button>
-        </div>
-
+            </button>
+        </div>  
         {error && <div className="error-message">{error}</div>}
       </form>
     </div>
