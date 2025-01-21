@@ -20,8 +20,8 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
     jobTitle: "",
     jobCompany: "",
     jobUrl: "",
-    createdDate: new Date().toISOString().split("T")[0], // YYYY-MM-DD
     deadline: "",
+    description: "",
     selectedSkills: [] as number[], // Array of skill IDs
   });
 
@@ -49,7 +49,7 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
   }, []);
 
   // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -69,10 +69,17 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
     e.preventDefault();
 
     try {
+      // Create the job ad
       const response = await axios.post(`${apiBaseUrl}/api/job-ads`, {
-        ...formData,
-        sponsorId: userId,
+        jobTitle: formData.jobTitle,
+        jobCompany: formData.jobCompany,
+        jobUrl: formData.jobUrl,
+        deadline: formData.deadline,
+        description: formData.description,
+        user: userId, // Pass userId as the sponsor
+        userType: typeUser, // Pass the type of the user
       });
+
       const jobId = response.data.jobId;
 
       // Link selected skills to the job ad
@@ -97,29 +104,49 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
       <form className="job-ad-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Job Title</label>
-          <input name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
+          <input
+            name="jobTitle"
+            value={formData.jobTitle}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="form-group">
           <label>Job Company</label>
-          <input name="jobCompany" value={formData.jobCompany} onChange={handleChange} required />
+          <input
+            name="jobCompany"
+            value={formData.jobCompany}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="form-group">
           <label>Job URL</label>
-          <input name="jobUrl" value={formData.jobUrl} onChange={handleChange} required />
-        </div>
-        <div className="form-group">
-          <label>Created Date</label>
           <input
-            type="date"
-            name="createdDate"
-            value={formData.createdDate}
+            name="jobUrl"
+            value={formData.jobUrl}
             onChange={handleChange}
             required
           />
         </div>
         <div className="form-group">
           <label>Deadline</label>
-          <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} />
+          <input
+            type="date"
+            name="deadline"
+            value={formData.deadline}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         {/* Skills Selection */}

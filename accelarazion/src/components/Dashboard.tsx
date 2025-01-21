@@ -4,45 +4,47 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../auth/useAuth";
 
-const Dashboard: React.FC = () => {
-  const [stories, setStories] = useState<any[]>([]);
-  const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchStories = async () => {
-      const response = await axios.get("/api/stories", { withCredentials: true });
-      setStories(response.data);
-    };
+const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
+// const Dashboard: React.FC = () => {
+//   const [stories, setStories] = useState<any[]>([]);
+//   const { user } = useAuth();
 
-    fetchStories();
-  }, []);
+//   useEffect(() => {
+//     const fetchStories = async () => {
+//       const response = await axios.get("/api/stories", { withCredentials: true });
+//       setStories(response.data);
+//     };
 
-  const userStories = stories.filter((story) => story.author_id === user?.id);
+//     fetchStories();
+//   }, []);
 
-  return (
-    <div>
-      <h2>All Stories</h2>
-      <ul>
-        {stories.map((story) => (
-          <li key={story.id}>
-            <h3>{story.title}</h3>
-            <p>{story.content}</p>
-            <p>Author: {story.author}</p>
-          </li>
-        ))}
-      </ul>
+//   const userStories = stories.filter((story) => story.author_id === user?.id);
 
-      <h2>Your Stories</h2>
-      <ul>
-        {userStories.map((story) => (
-          <li key={story.id}>
-            <h3>{story.title}</h3>
-            <p>{story.content}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <h2>All Stories</h2>
+//       <ul>
+//         {stories.map((story) => (
+//           <li key={story.id}>
+//             <h3>{story.title}</h3>
+//             <p>{story.content}</p>
+//             <p>Author: {story.author}</p>
+//           </li>
+//         ))}
+//       </ul>
 
-export default Dashboard;
+//       <h2>Your Stories</h2>
+//       <ul>
+//         {userStories.map((story) => (
+//           <li key={story.id}>
+//             <h3>{story.title}</h3>
+//             <p>{story.content}</p>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default Dashboard;

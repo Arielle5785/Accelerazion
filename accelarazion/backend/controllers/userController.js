@@ -2,6 +2,9 @@ const userModel = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+//registerUser, registerUser, loginUser, getUsers, logoutUser, verifyAuth, getCountries,
+// getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, createJobAd,
+// addJobSkills, getAllJobAds, getMatchingUsers,
 
 module.exports = {
   registerUser: async (req, res) => {
@@ -24,7 +27,7 @@ module.exports = {
       languages,
       userType,
     } = req.body;
-console.log(req.body);
+// console.log(req.body);
 
     // Validate required fields
     if (!password || !email || !firstName || !lastName || !userType) {
@@ -220,28 +223,41 @@ console.log(req.body);
     }
   },
 
-  createJobAd: async (req, res) => {
-    const { jobTitle, jobCompany, jobUrl, createdDate, deadline, sponsorId } = req.body;
+createJobAd: async (req, res) => {
+  const {
+    jobTitle,
+    jobCompany,
+    jobUrl,
+    deadline,
+    description,
+    userId, // Aligned with the model
+    userType, // Aligned with the model
+    skills,
+  } = req.body;
 
-    if (!jobTitle || !jobCompany || !jobUrl || !sponsorId) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
+  if (!jobTitle || !jobCompany || !jobUrl || !description || !userId || !userType) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
 
-    try {
-      const job = await userModel.createJobAd({
-        job_title: jobTitle,
-        job_company: jobCompany,
-        job_url: jobUrl,
-        created_date: createdDate,
-        deadline,
-        sponsor_id: sponsorId,
-      });
-      res.status(201).json({ message: "Job ad created successfully", jobId: job.id });
-    } catch (error) {
-      console.error("Error creating job ad:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  },
+  try {
+    const jobData = {
+      jobTitle,
+      jobCompany,
+      jobUrl,
+      deadline,
+      description,
+      user: userId, // Correct field name for the model
+      userType, // Correct field name for the model
+      skills,
+    };
+
+    const job = await userModel.createJobAd(jobData);
+    res.status(201).json({ message: "Job ad created successfully", jobId: job.id });
+  } catch (error) {
+    console.error("Error creating job ad:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+},
 
   addJobSkills: async (req, res) => {
     const { jobId, skillIds } = req.body;
@@ -268,31 +284,31 @@ console.log(req.body);
       res.status(500).json({ message: "Internal server error" });
     }
   },
-  getMatchingUsers: async (jobId) => {
-  const query = `
-    SELECT 
-        u.id AS user_id, 
-        u.name AS user_name, 
-        COUNT(js.skill_id) AS matching_skills
-    FROM 
-        job_skills js
-    JOIN 
-        users_skills us ON js.skill_id = us.skill_id
-    JOIN 
-        users u ON us.user_id = u.id
-    JOIN 
-        users_class uc ON u.id = uc.user_id
-    WHERE 
-        js.job_id = ?
-        AND uc.type_id = 1
-    GROUP BY 
-        u.id, u.name
-    ORDER BY 
-        matching_skills DESC
-    LIMIT 10;
-  `;
-  const [results] = await db.execute(query, [jobId]);
-  return results;
-}
+//   getMatchingUsers: async (jobId) => {
+//   const query = `
+//     SELECT 
+//         u.id AS user_id, 
+//         u.name AS user_name, 
+//         COUNT(js.skill_id) AS matching_skills
+//     FROM 
+//         job_skills js
+//     JOIN 
+//         users_skills us ON js.skill_id = us.skill_id
+//     JOIN 
+//         users u ON us.user_id = u.id
+//     JOIN 
+//         users_class uc ON u.id = uc.user_id
+//     WHERE 
+//         js.job_id = ?
+//         AND uc.type_id = 1
+//     GROUP BY 
+//         u.id, u.name
+//     ORDER BY 
+//         matching_skills DESC
+//     LIMIT 10;
+//   `;
+//   const [results] = await db.execute(query, [jobId]);
+//   return results;
+// }
 
 };

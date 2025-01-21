@@ -3,7 +3,7 @@ import axios from "axios";
 
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
-const JobAdsList: React.FC = () => {
+const AllJobsAd: React.FC = () => {
   const [jobAds, setJobAds] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,4 +46,4 @@ const JobAdsList: React.FC = () => {
   );
 };
 
-export default JobAdsList;
+export default AllJobsAd;

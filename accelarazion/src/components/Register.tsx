@@ -1,6 +1,7 @@
 import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../auth/useAuth";
 
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
@@ -85,9 +86,9 @@ const Register: React.FC = () => {
 
   // Handle nested language changes
   const handleLanguageChange = (index: number, field: string, value: string) => {
-     console.log("field>",field,"index>",index, "value>", value)
+    //  console.log("field>",field,"index>",index, "value>", value)
     const updatedLanguages = formData.languages.map((lang, i) =>{
-     console.log("lang>",lang,"i>",i)
+    //  console.log("lang>",lang,"i>",i)
     return (i === index ? { ...lang, [field]: value } : lang
     )});
 
@@ -98,7 +99,7 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     setError("");
-    console.log("formData >", formData);
+    // console.log("formData >", formData);
 
     try {
       const response = await axios.post(`${apiBaseUrl}/api/register`, formData, {

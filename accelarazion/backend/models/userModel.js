@@ -1,10 +1,10 @@
 const { db } = require('../db/db.js');
 const bcrypt = require("bcrypt");
-//createUser, getCountries, getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, getUserByEmail, getUsers, createJobAd,
+//createUser, getCountries, getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, getUserByEmail, getUsers, createJobAd, addJobSkills, getAllJobAds, getMatchingUsers
 
 module.exports = {
   createUser: async (userData) => {
-    console.log(userData);
+    // console.log(userData);
     
     const trx = await db.transaction();
     try {
@@ -121,6 +121,7 @@ module.exports = {
       throw error;
     }
   },
+
   getUserTypes: async () => {
   try {
     const userTypes = await db("type_users").select("id", "type");
@@ -130,6 +131,7 @@ module.exports = {
     throw error;
   }
   },
+
   getSkills: async () => {
   try {
     const skills = await db("skills").select("id", "skill_name", "category_skills");
@@ -153,7 +155,6 @@ module.exports = {
   }
 },
 
-
   getUserByEmail: async (email) => {
     try {
       const user = await db("users")
@@ -175,10 +176,41 @@ module.exports = {
       throw error;
     }
   },
+
   createJobAd: async (jobData) => {
-  const [job] = await db("jobs_ad").insert(jobData, ["id"]);
-  return job;
+  const trx = await db.transaction();
+  try {
+    const [job] = await trx("job_ads").insert(
+      {
+        job_title: jobData.jobTitle,
+        job_company: jobData.jobCompany,
+        job_url: jobData.jobUrl,
+        deadline: jobData.deadline,
+        description: jobData.description,
+        user_id: jobData.user, // This should be the user_id from the users table
+        type_id: jobData.userType, // This should be the type_id from the users_class table
+        created_date: new Date().toISOString(),
+      },
+      ["id"]
+    );
+
+    if (jobData.skills && Array.isArray(jobData.skills)) {
+      const jobSkills = jobData.skills.map((skillId) => ({
+        job_id: job.id,
+        skill_id: skillId,
+      }));
+      await trx("job_skills").insert(jobSkills);
+    }
+
+    await trx.commit();
+    return job;
+  } catch (error) {
+    await trx.rollback();
+    console.error("Error creating job ad:", error);
+    throw error;
+  }
 },
+
 
 addJobSkills: async (jobId, skillIds) => {
   const jobSkills = skillIds.map((skillId) => ({
@@ -186,7 +218,8 @@ addJobSkills: async (jobId, skillIds) => {
     skill_id: skillId,
   }));
   await db("job_skills").insert(jobSkills);
-},
+  },
+
 getAllJobAds: async () => {
   try {
     const jobAds = await db("jobs_ad as j")
@@ -213,6 +246,37 @@ getAllJobAds: async () => {
     console.error("Error fetching job ads:", error);
     throw error;
   }
-},
+  },
 
+ getMatchingUsers: async (jobId) => {
+    try {
+      const query = `
+        SELECT 
+          u.id AS user_id, 
+          u.first_name || ' ' || u.last_name AS user_name, 
+          COUNT(js.skill_id) AS matching_skills
+        FROM 
+          job_skills js
+        JOIN 
+          users_skills us ON js.skill_id = us.skill_id
+        JOIN 
+          users u ON us.user_id = u.id
+        JOIN 
+          users_class uc ON u.id = uc.user_id
+        WHERE 
+          js.job_id = ?
+          AND uc.type_id = 1
+        GROUP BY 
+          u.id
+        ORDER BY 
+          matching_skills DESC
+        LIMIT 10;
+      `;
+      const [results] = await db.raw(query, [jobId]);
+      return results;
+    } catch (error) {
+      console.error("Error fetching matching users:", error);
+      throw error;
+    }
+  },
 };
