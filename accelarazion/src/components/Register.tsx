@@ -13,8 +13,8 @@ const Register: React.FC = () => {
     lastName: "",
     gender: "male",
     email: "",
-    currentCountry: "",
-    phoneCode: "",
+    currentCountry: "France",
+    phoneCode: "+33",
     phoneNumber: "",
     currentJobTitle: "",
     currentCompany: "",
@@ -25,7 +25,11 @@ const Register: React.FC = () => {
     israelJob: "",
     password: "",
     userType: "", // Dropdown for Mentee, Mentor, etc.
-    languages: [{ language: "", level: "" }],
+    languages: [
+      { language: "French", level: "Native" },
+      { language: "English", level: "Professional" },
+      { language: "Hebrew", level: "Conversational" },
+    ],
   });
 
   const [countries, setCountries] = useState<any[]>([]);
@@ -56,12 +60,12 @@ const Register: React.FC = () => {
   }, []);
 
   // Add a new language entry
-  const addLanguage = () => {
-    setFormData({
-      ...formData,
-      languages: [...formData.languages, { language: "", level: "" }],
-    });
-  };
+  // const addLanguage = () => {
+  //   setFormData({
+  //     ...formData,
+  //     languages: [...formData.languages, { language: "", level: "" }],
+  //   });
+  // };
 
   // Handle form input changes
   const handleChange = (
@@ -81,9 +85,12 @@ const Register: React.FC = () => {
 
   // Handle nested language changes
   const handleLanguageChange = (index: number, field: string, value: string) => {
-    const updatedLanguages = formData.languages.map((lang, i) =>
-      i === index ? { ...lang, [field]: value } : lang
-    );
+     console.log("field>",field,"index>",index, "value>", value)
+    const updatedLanguages = formData.languages.map((lang, i) =>{
+     console.log("lang>",lang,"i>",i)
+    return (i === index ? { ...lang, [field]: value } : lang
+    )});
+
     setFormData({ ...formData, languages: updatedLanguages });
   };
 
@@ -91,17 +98,18 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     setError("");
+    console.log("formData >", formData);
 
     try {
       const response = await axios.post(`${apiBaseUrl}/api/register`, formData, {
       withCredentials: true,
-    });
-    const userId = response.data.user.id; // Assuming backend returns user.id
-    return userId;
-    } catch (err: any) {
-    setError(err.response?.data?.message || "Registration failed");
-    throw err;
-    }
+      });
+      const userId = response.data.user.id; // Assuming backend returns user.id
+      return userId;
+      } catch (err: any) {
+      setError(err.response?.data?.message || "Registration failed");
+      throw err;
+      }
   };
 
   return (
@@ -260,9 +268,10 @@ const Register: React.FC = () => {
             </select>
           </div>
         ))}
-        <button type="button" onClick={addLanguage}>
+
+        {/* <button type="button" onClick={addLanguage}>
           + Add Language
-        </button>
+        </button> */}
 
         {/* Buttons */}
        <div className="form-actions">

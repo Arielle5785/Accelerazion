@@ -1,9 +1,11 @@
 const { db } = require('../db/db.js');
 const bcrypt = require("bcrypt");
-//createUser, getCountries,  
+//createUser, getCountries, getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, getUserByEmail, getUsers, createJobAd,
 
 module.exports = {
   createUser: async (userData) => {
+    console.log(userData);
+    
     const trx = await db.transaction();
     try {
       // Hash the password
@@ -76,7 +78,7 @@ module.exports = {
       }
 
       // Insert into user_class
-      await trx("user_class").insert({
+      await trx("users_class").insert({
         user_id: user.id,
         type_id: userType.id,
       });
