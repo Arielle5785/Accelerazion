@@ -1,5 +1,6 @@
 const { db } = require('../db/db.js');
 const bcrypt = require("bcrypt");
+//createUser, getCountries,  
 
 module.exports = {
   createUser: async (userData) => {
@@ -173,7 +174,7 @@ module.exports = {
     }
   },
   createJobAd: async (jobData) => {
-  const [job] = await db("job_ads").insert(jobData, ["id"]);
+  const [job] = await db("jobs_ad").insert(jobData, ["id"]);
   return job;
 },
 
@@ -186,7 +187,7 @@ addJobSkills: async (jobId, skillIds) => {
 },
 getAllJobAds: async () => {
   try {
-    const jobAds = await db("job_ads as j")
+    const jobAds = await db("jobs_ad as j")
       .join("users as u", "j.sponsor_id", "u.id")
       .leftJoin("job_skills as js", "j.id", "js.job_id")
       .leftJoin("skills as s", "js.skill_id", "s.id")

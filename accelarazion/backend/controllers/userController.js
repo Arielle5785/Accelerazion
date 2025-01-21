@@ -25,7 +25,8 @@ module.exports = {
       userType,
     } = req.body;
 
-    if (!password || !email || !firstName || !lastName||!userType) {
+    // Validate required fields
+    if (!password || !email || !firstName || !lastName || !userType) {
       return res.status(400).json({
         message: "Required fields are missing",
       });
@@ -49,7 +50,7 @@ module.exports = {
         israelJob,
         password,
         languages,
-        userType
+        userType,
       };
 
       const user = await userModel.createUser(userData);
@@ -59,6 +60,7 @@ module.exports = {
       });
     } catch (error) {
       console.error(error);
+      // Handle unique constraint violation for email
       if (error.code === "23505") {
         res.status(400).json({
           message: "Email already exists",
@@ -70,73 +72,71 @@ module.exports = {
       }
     }
   },
+
   loginUser: async (req, res) => {
     const { email, password } = req.body;
-    console.log(password, email);
 
     try {
       const user = await userModel.getUserByEmail(email);
-      console.log(user);
       if (!user) {
-        res.status(404).json({ message: "User not found" });
-        return;
+        return res.status(404).json({ message: "User not found" });
       }
 
       const passwordMatch = await bcrypt.compare(password + "", user.password_hash);
-      //   console.log(passwordMatch);
-
       if (!passwordMatch) {
-        res.status(404).json({ message: "Wrong password" });
-        return;
+        return res.status(404).json({ message: "Wrong password" });
       }
+
       const { JWT_SECRET } = process.env;
-      /** generate a token */
+
+      // Generate a token
       const accessToken = jwt.sign(
         { userid: user.id, email: user.email },
         JWT_SECRET,
         { expiresIn: "5m" }
       );
 
-      /** set the token in httpOnly cookie */
+      // Set the token in httpOnly cookie
       res.cookie("token", accessToken, {
         maxAge: 60 * 5 * 1000,
         httpOnly: true,
       });
 
-      /** response to client */
       res.status(200).json({
         message: "Login Successfully",
         user: { userid: user.id, email: user.email },
         token: accessToken,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       res.status(500).json({
         message: "Internal server error",
       });
     }
   },
+
   getUsers: async (req, res) => {
     try {
       const users = await userModel.getUsers();
       res.json(users);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       res.status(500).json({
         message: "Internal server error",
       });
     }
   },
+
   logoutUser: (req, res) => {
     res.clearCookie("token");
-    req.cookies.token = null;
-    delete req.cookies.token;
-    /** set nul in db column */
-    res.sendStatus(200);
+    res.sendStatus(200); // Logout response
   },
+
   verifyAuth: (req, res) => {
     const { userid, email } = req.user;
     const { JWT_SECRET } = process.env;
+
+    // Refresh the token
     const newAccessToken = jwt.sign({ userid, email }, JWT_SECRET, {
       expiresIn: "5m",
     });
@@ -151,7 +151,6 @@ module.exports = {
       user: { userid, email },
       token: newAccessToken,
     });
-    // res.sendStatus(200);
   },
 
   getCountries: async (req, res) => {
@@ -163,6 +162,7 @@ module.exports = {
       res.status(500).json({ message: "Internal server error" });
     }
   },
+
   getLanguages: async (req, res) => {
     try {
       const languages = await userModel.getLanguages();
@@ -174,94 +174,97 @@ module.exports = {
   },
 
   getLanguageLevels: async (req, res) => {
-  try {
-    const levels = await userModel.getLanguageLevels();
-    res.status(200).json(levels);
-  } catch (error) {
-    console.error("Error fetching language levels:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+    try {
+      const levels = await userModel.getLanguageLevels();
+      res.status(200).json(levels);
+    } catch (error) {
+      console.error("Error fetching language levels:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   },
+
   getUserTypes: async (req, res) => {
-  try {
-    const userTypes = await userModel.getUserTypes();
-    res.status(200).json(userTypes);
-  } catch (error) {
-    console.error("Error fetching user types:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+    try {
+      const userTypes = await userModel.getUserTypes();
+      res.status(200).json(userTypes);
+    } catch (error) {
+      console.error("Error fetching user types:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   },
+
   getSkills: async (req, res) => {
-  try {
-    const skills = await userModel.getSkills();
-    res.status(200).json(skills);
-  } catch (error) {
-    console.error("Error fetching skills:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-},
-addUserSkills: async (req, res) => {
-  const { userId, skillIds } = req.body;
-  if (!userId || !Array.isArray(skillIds)) {
-    return res.status(400).json({ message: "Invalid data" });
-  }
-
-  try {
-    await userModel.addUserSkills(userId, skillIds);
-    res.status(200).json({ message: "Skills saved successfully" });
-  } catch (error) {
-    console.error("Error saving user skills:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+    try {
+      const skills = await userModel.getSkills();
+      res.status(200).json(skills);
+    } catch (error) {
+      console.error("Error fetching skills:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   },
-createJobAd: async (req, res) => {
-  const { jobTitle, jobCompany, jobUrl, createdDate, deadline, sponsorId } = req.body;
 
-  if (!jobTitle || !jobCompany || !jobUrl || !sponsorId) {
-    return res.status(400).json({ message: "Missing required fields" });
-  }
+  addUserSkills: async (req, res) => {
+    const { userId, skillIds } = req.body;
 
-  try {
-    const job = await userModel.createJobAd({
-      job_title: jobTitle,
-      job_company: jobCompany,
-      job_url: jobUrl,
-      created_date: createdDate,
-      deadline,
-      sponsor_id: sponsorId,
-    });
-    res.status(201).json({ message: "Job ad created successfully", jobId: job.id });
-  } catch (error) {
-    console.error("Error creating job ad:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-},
+    if (!userId || !Array.isArray(skillIds)) {
+      return res.status(400).json({ message: "Invalid data" });
+    }
 
-addJobSkills: async (req, res) => {
-  const { jobId, skillIds } = req.body;
+    try {
+      await userModel.addUserSkills(userId, skillIds);
+      res.status(200).json({ message: "Skills saved successfully" });
+    } catch (error) {
+      console.error("Error saving user skills:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
 
-  if (!jobId || !Array.isArray(skillIds)) {
-    return res.status(400).json({ message: "Invalid data" });
-  }
+  createJobAd: async (req, res) => {
+    const { jobTitle, jobCompany, jobUrl, createdDate, deadline, sponsorId } = req.body;
 
-  try {
-    await userModel.addJobSkills(jobId, skillIds);
-    res.status(200).json({ message: "Job skills added successfully" });
-  } catch (error) {
-    console.error("Error adding job skills:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-},
-getAllJobAds: async (req, res) => {
-  try {
-    const jobAds = await userModel.getAllJobAds();
-    res.status(200).json(jobAds);
-  } catch (error) {
-    console.error("Error fetching job ads:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+    if (!jobTitle || !jobCompany || !jobUrl || !sponsorId) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    try {
+      const job = await userModel.createJobAd({
+        job_title: jobTitle,
+        job_company: jobCompany,
+        job_url: jobUrl,
+        created_date: createdDate,
+        deadline,
+        sponsor_id: sponsorId,
+      });
+      res.status(201).json({ message: "Job ad created successfully", jobId: job.id });
+    } catch (error) {
+      console.error("Error creating job ad:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  addJobSkills: async (req, res) => {
+    const { jobId, skillIds } = req.body;
+
+    if (!jobId || !Array.isArray(skillIds)) {
+      return res.status(400).json({ message: "Invalid data" });
+    }
+
+    try {
+      await userModel.addJobSkills(jobId, skillIds);
+      res.status(200).json({ message: "Job skills added successfully" });
+    } catch (error) {
+      console.error("Error adding job skills:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+
+  getAllJobAds: async (req, res) => {
+    try {
+      const jobAds = await userModel.getAllJobAds();
+      res.status(200).json(jobAds);
+    } catch (error) {
+      console.error("Error fetching job ads:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
 };
-
-
-};
-

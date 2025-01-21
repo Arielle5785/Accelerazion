@@ -30,6 +30,8 @@ const Navbar: React.FC = () => {
           <>
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
+            <Link to="/register/skills">Register Skills</Link>
+            
           </>
         )}
         {isAuthenticated && <Link to="/dashboard">Dashboard</Link>}
