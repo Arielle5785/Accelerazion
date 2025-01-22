@@ -1,6 +1,6 @@
 const { db } = require('../db/db.js');
 const bcrypt = require("bcrypt");
-//createUser, getCountries, getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, getUserByEmail, getUsers, createJobAd, addJobSkills, getAllJobAds, getMatchingUsers
+//createUser, getCountries, getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, getUserByEmail, getUsers, createJobAd, addJobSkills, getAllJobAds, getMatchingUsers, getUserById, 
 
 module.exports = {
   createUser: async (userData) => {
@@ -279,4 +279,71 @@ getAllJobAds: async () => {
       throw error;
     }
   },
+ 
+ getUserById: async (userId) => {
+  try {
+    // Fetch the user details with all necessary joins
+    const user = await db("users as u")
+      .join("countries as c", "u.current_country", "c.id")
+      .join("users_class as uc", "u.id", "uc.user_id")
+      .join("type_users as tu", "uc.type_id", "tu.id")
+      .select(
+        "u.id as id",
+        "u.email",
+        "u.first_name as firstName",
+        "u.last_name as lastName",
+        "u.gender as gender",
+        "c.country_name as currentCountry",
+        "c.phone_code as phoneCode",
+        "u.phone_number as phoneNumber",
+        "tu.type as userType",
+        "u.current_job_title as currentJobTitle",
+        "u.current_company as currentCompany",
+        "u.linkedin_profile as linkedinProfile",
+        "u.github_profile as githubProfile",
+        "u.commit_alyah as commitAlyah",
+        "u.dob as dob",
+        "u.israel_job as israelJob",
+        "u.mentor as mentor"
+      )
+      .where("u.id", userId)
+      .first();
+
+    // If the user doesn't exist, return null
+    if (!user) {
+      return null;
+    }
+
+    // Fetch user languages with their levels
+    const languages = await db("user_languages as ul")
+      .join("languages as l", "ul.language_id", "l.id")
+      .join("languages_level as ll", "ul.level_id", "ll.id")
+      .select(
+        "l.language_name as language",
+        "ll.level as level"
+      )
+      .where("ul.user_id", userId);
+
+    // Attach languages to the user object
+    user.languages = languages;
+
+    return user;
+  } catch (error) {
+    console.error("Error in getUserById:", error);
+    throw error;
+  }
+},
+
+getUserSkills: async (userId) => {
+  try {
+    const skills = await db("user_skills as us")
+      .join("skills as s", "us.skill_id", "s.id")
+      .select("s.id", "s.skill_name")
+      .where("us.user_id", userId);
+    return skills;
+  } catch (error) {
+    throw error;
+  }
+},
+
 };

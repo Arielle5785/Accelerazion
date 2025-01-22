@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 //registerUser, registerUser, loginUser, getUsers, logoutUser, verifyAuth, getCountries,
 // getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, createJobAd,
-// addJobSkills, getAllJobAds, getMatchingUsers,
+// addJobSkills, getAllJobAds, getMatchingUsers, getUserData
 
 module.exports = {
   registerUser: async (req, res) => {
@@ -310,5 +310,22 @@ createJobAd: async (req, res) => {
 //   const [results] = await db.execute(query, [jobId]);
 //   return results;
 // }
+
+  getUserData: async (req, res) => {
+  try {
+    const userId = req.user.userid; // Ensure `verifyToken` middleware sets `req.user`
+    const user = await userModel.getUserById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+},
+
 
 };

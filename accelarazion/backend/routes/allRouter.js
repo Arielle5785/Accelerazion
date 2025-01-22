@@ -11,6 +11,7 @@ router.get("/languages-level", userController.getLanguageLevels);
 router.get("/type-users", userController.getUserTypes);
 router.get("/skills", userController.getSkills);
 router.post("/user-skills", userController.addUserSkills);
+router.get("/user-skills", userController.addUserSkills);
 router.post("/login", userController.loginUser);
 router.get("/all", verifyToken, userController.getUsers);
 router.post("/logout", userController.logoutUser);

@@ -13,7 +13,7 @@ const Register: React.FC = () => {
     firstName: "arielle",
     lastName: "benadi",
     gender: "female",
-    email: "test18@gmail.com",
+    email: "test  @gmail.com",
     currentCountry: "73",
     phoneCode: "73",
     phoneNumber: "1234567890",
@@ -112,14 +112,28 @@ const Register: React.FC = () => {
       languages: updatedLanguages
     };
   });
+  };
+  const checkEmailUniqueness = async (email: string): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${apiBaseUrl}/api/check-email`, { email });
+    return response.data.isUnique;
+  } catch (error) {
+    console.error("Error checking email uniqueness:", error);
+    return false; // Assume not unique in case of an error
+  }
 };
 
+  
   // Submit form
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     setError("");
-    console.log("formData >", formData); 
-
+    // console.log("formData >", formData); 
+    const isEmailUnique = await checkEmailUniqueness(formData.email);
+    if (!isEmailUnique) {
+    setError("This email is already in use. Please use a different email.");
+    return;
+    }
     try {
       const response = await axios.post(`${apiBaseUrl}/api/register`, formData, {
       withCredentials: true,
