@@ -3,8 +3,8 @@ import Navbar from "./components/Navbar"
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Register_2 from "./components/Register_2";
-import AllJobsAd from "./components/AllJobsAd";
-import JobAds from "./components/JobAds";
+// import AllJobsAd from "./components/AllJobsAd";
+// import JobAds from "./components/JobAds";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from "./components/UserProfile";
