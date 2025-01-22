@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
             <Link to="/job-ads">Job Ad</Link>
           </>
         )}
-        {/* {isAuthenticated && <Link to="/dashboard">Dashboard</Link>} */}
+        {isAuthenticated && <Link to="/dashboard">Dashboard</Link>}
         {isAuthenticated && <button onClick={handleLogout}>Logout</button>}
       </div>
     </nav>

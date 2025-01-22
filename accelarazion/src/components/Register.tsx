@@ -10,26 +10,26 @@ const Register: React.FC = () => {
 
   // Form fields
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    gender: "male",
-    email: "",
-    currentCountry: "France",
-    phoneCode: "+33",
-    phoneNumber: "",
-    currentJobTitle: "",
-    currentCompany: "",
-    linkedinProfile: "",
-    githubProfile: "",
-    commitAlyah: false,
-    dob: "",
-    israelJob: "",
-    password: "",
-    userType: "", // Dropdown for Mentee, Mentor, etc.
+    firstName: "arielle",
+    lastName: "benadi",
+    gender: "female",
+    email: "test18@gmail.com",
+    currentCountry: "73",
+    phoneCode: "73",
+    phoneNumber: "1234567890",
+    currentJobTitle: "COO",
+    currentCompany: "TTTT",
+    linkedinProfile: "rtyqer.com",
+    githubProfile: "qwsedrtgyh.com",
+    commitAlyah: true,
+    dob: "1998-05-31",
+    israelJob: "COO",
+    password: "1234567",
+    userType: "1", // Dropdown for Mentee, Mentor, etc.
     languages: [
-      { language: "French", level: "Native" },
-      { language: "English", level: "Professional" },
-      { language: "Hebrew", level: "Conversational" },
+      { language: "45", level: "1" },
+      { language: "46", level: "2" },
+      {language:"47",level:"3"}
     ],
   });
 
@@ -61,12 +61,12 @@ const Register: React.FC = () => {
   }, []);
 
   // Add a new language entry
-  // const addLanguage = () => {
-  //   setFormData({
-  //     ...formData,
-  //     languages: [...formData.languages, { language: "", level: "" }],
-  //   });
-  // };
+  const addLanguage = () => {
+    setFormData({
+      ...formData,
+      languages: [...formData.languages, { language: "", level: "" }],
+    });
+  };
 
   // Handle form input changes
   const handleChange = (
@@ -85,21 +85,40 @@ const Register: React.FC = () => {
   };
 
   // Handle nested language changes
-  const handleLanguageChange = (index: number, field: string, value: string) => {
-    //  console.log("field>",field,"index>",index, "value>", value)
-    const updatedLanguages = formData.languages.map((lang, i) =>{
-    //  console.log("lang>",lang,"i>",i)
-    return (i === index ? { ...lang, [field]: value } : lang
-    )});
+  // const handleLanguageChange = (index: number, field: string, value: string) => {
+  //   //  console.log("field>",field,"index>",index, "value>", value)
+  //   const updatedLanguages = formData.languages.map((lang, i) =>{
+  //   //  console.log("lang>",lang,"i>",i)
+  //   return (i === index ? { ...lang, [field]: value } : lang
+  //   )});
 
-    setFormData({ ...formData, languages: updatedLanguages });
-  };
+  //   setFormData({ ...formData, languages: updatedLanguages });
+  // };
+  const handleLanguageChange = (index: number, field: string, value: string) => {
+    if(value === "-1") return
+  setFormData((prevFormData) => {
+    // Create a copy of the languages array
+    const updatedLanguages = [...prevFormData.languages];
+    // Update the specific language object at the given index
+    updatedLanguages[index] = {
+      ...updatedLanguages[index],
+      [field]: value
+    };
+    // Return the new form data with updated languages
+    console.log(updatedLanguages);
+    
+    return {
+      ...prevFormData,
+      languages: updatedLanguages
+    };
+  });
+};
 
   // Submit form
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     setError("");
-    // console.log("formData >", formData);
+    console.log("formData >", formData); 
 
     try {
       const response = await axios.post(`${apiBaseUrl}/api/register`, formData, {
@@ -146,7 +165,7 @@ const Register: React.FC = () => {
             <option value="">Select Type</option>
             {Array.isArray(userTypes) &&
               userTypes.map((type) => (
-                <option key={type.id} value={type.type}>
+                <option key={type.id} value={type.id}>
                   {type.type}
                 </option>
               ))}
@@ -159,7 +178,7 @@ const Register: React.FC = () => {
           <select name="currentCountry" value={formData.currentCountry} onChange={handleChange}>
             {Array.isArray(countries) &&
               countries.map((country) => (
-                <option key={country.id} value={country.country_name}>
+                <option key={country.id} value={country.id}>
                   {country.country_name}
                 </option>
               ))}
@@ -170,7 +189,7 @@ const Register: React.FC = () => {
           <select name="phoneCode" value={formData.phoneCode} onChange={handleChange}>
             {Array.isArray(countries) &&
               countries.map((country) => (
-                <option key={country.id} value={country.phone_code}>
+                <option key={country.id} value={country.id}>
                   {country.phone_code}
                 </option>
               ))}
@@ -241,38 +260,39 @@ const Register: React.FC = () => {
         </div>
 
         {/* Languages */}
-        {formData.languages.map((lang, index) => (
-          <div key={index} className="form-group">
-            <label>Language</label>
-            <select
-              value={lang.language}
-              onChange={(e) => handleLanguageChange(index, "language", e.target.value)}
-            >
-              {Array.isArray(languages) &&
-                languages.map((language) => (
-                  <option key={language.id} value={language.language_name}>
-                    {language.language_name}
-                  </option>
-                ))}
-            </select>
-            <label>Level</label>
-            <select
-              value={lang.level}
-              onChange={(e) => handleLanguageChange(index, "level", e.target.value)}
-            >
-              {Array.isArray(languageLevels) &&
-                languageLevels.map((level) => (
-                  <option key={level.id} value={level.level}>
-                    {level.level}
-                  </option>
-                ))}
-            </select>
-          </div>
-        ))}
+        <div>
+      {formData.languages.map((lang, index) => (
+        <div key={index} className="form-group">
+          <label>Language</label>
+          <select
+            value={lang.language}
+            onChange={(e) => handleLanguageChange(index, "language", e.target.value)}
+          ><option key={-1} value={-1}></option>
+            {languages.map((language) => (
+              <option key={language.id} value={language.id}>
+                {language.language_name}
+              </option>
+            ))}
+          </select>
+          
+          <label>Level</label>
+          <select
+            value={lang.level}
+            onChange={(e) => handleLanguageChange(index, "level", e.target.value)}
+          ><option key={-1} value={-1}></option>
+            {languageLevels.map((level) => (
+              <option key={level.id} value={level.id}>
+                {level.level}
+              </option>
+            ))}
+          </select>
+        </div>
+      ))}
+    </div>
 
-        {/* <button type="button" onClick={addLanguage}>
+        <button type="button" onClick={addLanguage}>
           + Add Language
-        </button> */}
+        </button>
 
         {/* Buttons */}
        <div className="form-actions">

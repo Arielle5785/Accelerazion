@@ -5,7 +5,7 @@ import Register from "./components/Register";
 import Register_2 from "./components/Register_2";
 import AllJobsAd from "./components/AllJobsAd";
 import JobAds from "./components/JobAds";
-// import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from "./components/UserProfile";
 import "./App.css";
@@ -25,14 +25,14 @@ const App: React.FC = () => {
             <Route path="/register/skills" element={<Register_2 />} />
             <Route path="/all-jobs-ad" element={<AllJobsAd />} />
             <Route path="/job-ads" element={<JobAds />} />
-            {/* <Route
+            <Route
               path="/dashboard"
-              element={ */}
-                {/* // <ProtectedRoute> */}
-                  {/* <Dashboard /> */}
-                {/* </ProtectedRoute>
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
               }
-            /> */}
+            />
             <Route
               path="/profile"
               element={

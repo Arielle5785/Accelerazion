@@ -12,8 +12,8 @@ module.exports = {
       const hashPassword = await bcrypt.hash(userData.password + "", 10);
 
       const country = await trx("countries")
-        .select("country_name", "phone_code")
-        .where("country_name", userData.currentCountry) // Use country_name instead of id
+        .select("id")
+        .where("id", userData.currentCountry) // Use country_name instead of id
         .first();
 
       if (!country) {
@@ -22,7 +22,7 @@ module.exports = {
 
       const userType = await trx("type_users")
         .select("id")
-        .where("type", userData.userType)
+        .where("id", userData.userType)
         .first();
 
       if (!userType) {
@@ -36,8 +36,8 @@ module.exports = {
           last_name: userData.lastName,
           gender: userData.gender,
           email: userData.email.toLowerCase(),
-          current_country: country.country_name,
-          phone_code: country.phone_code,
+          current_country: country.id,
+          phone_code: country.id,
           phone_number: userData.phoneNumber,
           current_job_title: userData.currentJobTitle,
           current_company: userData.currentCompany,
@@ -57,12 +57,12 @@ module.exports = {
         for (const lang of userData.languages) {
           const language = await trx("languages")
             .select("id")
-            .where("language_name", lang.language)
+            .where("id", lang.language)
             .first();
 
           const level = await trx("languages_level")
             .select("id")
-            .where("level", lang.level)
+            .where("id", lang.level)
             .first();
 
           if (!language || !level) {

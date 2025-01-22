@@ -8,12 +8,12 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
   const navigate = useNavigate();
 
   // Check user eligibility
-  useEffect(() => {
-    if (!["Mentor", "Sponsor", "Admin"].includes(typeUser)) {
-      alert("You are not authorized to create job ads.");
-      navigate("/dashboard");
-    }
-  }, [typeUser, navigate]);
+  // useEffect(() => {
+  //   if (!["Mentor", "Sponsor", "Admin"].includes(typeUser)) {
+  //     alert("You are not authorized to create job ads.");
+  //     navigate("/dashboard");
+  //   }
+  // }, [typeUser, navigate]);
 
   // Form fields
   const [formData, setFormData] = useState({
