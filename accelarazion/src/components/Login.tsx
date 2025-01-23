@@ -24,7 +24,6 @@ const Login: React.FC = () => {
         { withCredentials: true }
       );
       const { user, token } = response.data;
-      console.log({ user, token });
       login(user, token);
       navigate("/dashboard");
     } catch (err: any) {

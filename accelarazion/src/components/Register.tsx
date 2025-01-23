@@ -10,8 +10,8 @@ const Register: React.FC = () => {
 
   // Form fields
   const [formData, setFormData] = useState({
-    firstName: "arielle",
-    lastName: "benadi",
+    firstName: "AAAA",
+    lastName: "BBBB",
     gender: "female",
     email: "test  @gmail.com",
     currentCountry: "73",
@@ -27,9 +27,9 @@ const Register: React.FC = () => {
     password: "1234567",
     userType: "1", // Dropdown for Mentee, Mentor, etc.
     languages: [
-      { language: "45", level: "1" },
-      { language: "46", level: "2" },
-      {language:"47",level:"3"}
+      { language: "73", level: "1" },
+      { language: "36", level: "2" },
+      {language:"57",level:"3"}
     ],
   });
 
@@ -84,16 +84,6 @@ const Register: React.FC = () => {
     });
   };
 
-  // Handle nested language changes
-  // const handleLanguageChange = (index: number, field: string, value: string) => {
-  //   //  console.log("field>",field,"index>",index, "value>", value)
-  //   const updatedLanguages = formData.languages.map((lang, i) =>{
-  //   //  console.log("lang>",lang,"i>",i)
-  //   return (i === index ? { ...lang, [field]: value } : lang
-  //   )});
-
-  //   setFormData({ ...formData, languages: updatedLanguages });
-  // };
   const handleLanguageChange = (index: number, field: string, value: string) => {
     if(value === "-1") return
   setFormData((prevFormData) => {
@@ -113,38 +103,50 @@ const Register: React.FC = () => {
     };
   });
   };
-  const checkEmailUniqueness = async (email: string): Promise<boolean> => {
-  try {
-    const response = await axios.post(`${apiBaseUrl}/api/check-email`, { email });
-    return response.data.isUnique;
-  } catch (error) {
-    console.error("Error checking email uniqueness:", error);
-    return false; // Assume not unique in case of an error
-  }
-};
-
   
   // Submit form
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     setError("");
-    // console.log("formData >", formData); 
-    const isEmailUnique = await checkEmailUniqueness(formData.email);
-    if (!isEmailUnique) {
-    setError("This email is already in use. Please use a different email.");
-    return;
-    }
+    
     try {
-      const response = await axios.post(`${apiBaseUrl}/api/register`, formData, {
+      const responseRegister = await axios.post(`${apiBaseUrl}/api/register`, formData, {
       withCredentials: true,
       });
-      const userId = response.data.user.id; // Assuming backend returns user.id
-      return userId;
+      const { user } = responseRegister.data;
+      if (user) {
+        console.log("user", user);
+        
+      try {
+        const responseLogin = await axios.post(`${apiBaseUrl}/api/login`, { email:formData.email, password:formData.password }, {
+        withCredentials: true,
+        });
+        const { token } = responseLogin.data;
+        console.log("token", token);
+        
+        if(token){
+          navigate(`/register/skills`);
+        }
+        
       } catch (err: any) {
-      setError(err.response?.data?.message || "Registration failed");
-      throw err;
+        console.log("Something went wrong!");
       }
-  };
+      }
+      
+      
+      } catch (err: any) {
+  //     setError(err.response?.data?.message || "Registration failed");
+  //     throw err;
+  //     }
+  // }; 
+        if (err.response?.data?.message?.includes("email already exists")) {
+            setError("Email already exists. Redirecting to skills page.");
+            navigate(`/register/skills?email=${formData.email}`);
+          } else {
+            setError(err.response?.data?.message || "Registration failed");
+          }
+        }
+      };
 
   return (
     <div className="auth-form-container">
@@ -309,8 +311,8 @@ const Register: React.FC = () => {
         </button>
 
         {/* Buttons */}
-       <div className="form-actions">
-        <button type="submit">Save</button>
+       {/* <div className="form-actions"> */}
+        {/* <button type="submit">Save</button>
         <button
             type="button"
             onClick={async (e) => {
@@ -326,8 +328,10 @@ const Register: React.FC = () => {
             }}
         >
             Add Skills
-            </button>
-        </div>  
+            </button> */}
+                  {/* </div>   */}
+        {/* {error && <div className="error-message">{error}</div>} */}
+        <button type="submit">Save and Add Skills</button>
         {error && <div className="error-message">{error}</div>}
       </form>
     </div>

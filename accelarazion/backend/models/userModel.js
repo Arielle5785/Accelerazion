@@ -1,6 +1,6 @@
 const { db } = require('../db/db.js');
 const bcrypt = require("bcrypt");
-//createUser, getCountries, getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, getUserByEmail, getUsers, createJobAd, addJobSkills, getAllJobAds, getMatchingUsers, getUserById, 
+//createUser, getCountries, getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, getUserByEmail, getUsers, createJobAd, addJobSkills, getAllJobAds, getMatchingUsers, getUserById, getLanguagesByUserID
 
 module.exports = {
   createUser: async (userData) => {
@@ -346,4 +346,17 @@ getUserSkills: async (userId) => {
   }
 },
 
+  getLanguagesByUserID: async (userId) => {
+    try {
+    const languages = await db("languages as l")
+      .join("user_languages as ul", "ul.language_id", "l.id")
+      .select("l.language_name", "ul.language_id", "ul.user_id")
+      .where("ul.user_id", userId);
+
+    return languages;
+  } catch (error) {
+    console.error("Error fetching user languages:", error);
+    throw error;
+  }
+}
 };

@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 //registerUser, registerUser, loginUser, getUsers, logoutUser, verifyAuth, getCountries,
 // getLanguages, getLanguageLevels, getUserTypes, getSkills, addUserSkills, createJobAd,
-// addJobSkills, getAllJobAds, getMatchingUsers, getUserData
+// addJobSkills, getAllJobAds, getMatchingUsers, getUserData, getLanguagesByUserID
 
 module.exports = {
   registerUser: async (req, res) => {
@@ -56,11 +56,11 @@ module.exports = {
         languages,
         userType,
       };
-
+      
       const user = await userModel.createUser(userData);
       res.status(201).json({
         message: "User registered successfully",
-        user,
+        user
       });
     } catch (error) {
       console.error(error);
@@ -97,18 +97,18 @@ module.exports = {
       const accessToken = jwt.sign(
         { userid: user.id, email: user.email },
         JWT_SECRET,
-        { expiresIn: "5m" }
+        { expiresIn: "7d" }
       );
 
       // Set the token in httpOnly cookie
       res.cookie("token", accessToken, {
-        maxAge: 60 * 5 * 1000,
+        maxAge: 60 * 60 * 24 * 7 * 1000,
         httpOnly: true,
       });
 
       res.status(200).json({
         message: "Login Successfully",
-        user: { userid: user.id, email: user.email },
+        user: { userid: user.id, email: user.email, user: user },
         token: accessToken,
       });
     } catch (error) {
@@ -142,12 +142,12 @@ module.exports = {
 
     // Refresh the token
     const newAccessToken = jwt.sign({ userid, email }, JWT_SECRET, {
-      expiresIn: "5m",
+      expiresIn: "30m",
     });
 
     res.cookie("token", newAccessToken, {
       httpOnly: true,
-      maxAge: 60 * 5 * 1000,
+      maxAge: 60 * 30 * 1000,
     });
 
     res.json({
@@ -327,5 +327,17 @@ createJobAd: async (req, res) => {
   }
 },
 
+  getLanguagesByUserID: async(req, res) => {
+    const { userid } = req.params
+    
+    try {
+      const languages = await userModel.getLanguagesByUserID(userid);
+
+      res.status(200).json({languages})
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+  }
 
 };

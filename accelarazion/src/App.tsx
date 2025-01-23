@@ -7,7 +7,7 @@ import Register_2 from "./components/Register_2";
 // import JobAds from "./components/JobAds";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
-import UserProfile from "./components/UserProfile";
+// import UserProfile from "./components/UserProfile";
 import "./App.css";
 
 
@@ -16,13 +16,14 @@ const App: React.FC = () => {
     <>
       <div className="app">
         <Navbar />
-        <UserProfile />
+        {/* <UserProfile /> */}
         <main className="container">
           <Routes>
             <Route path="/" element={<h2>Welcome to AcceleraZion</h2>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/register/skills" element={<Register_2 />} />
+            
             {/* <Route path="/all-jobs-ad" element={<AllJobsAd />} /> */}
             {/* <Route path="/job-ads" element={<JobAds />} /> */}
             <Route
@@ -33,14 +34,14 @@ const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/profile"
               element={
                 <ProtectedRoute>
                     <UserProfile />
                 </ProtectedRoute>
               }
-            />
+            /> */}
           </Routes>
         </main>
       </div>

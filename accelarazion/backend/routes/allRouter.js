@@ -7,6 +7,7 @@ const router = Router();
 router.post("/register", userController.registerUser);
 router.get("/countries", userController.getCountries);
 router.get("/languages", userController.getLanguages);
+router.get("/user-languages/:userid", userController.getLanguagesByUserID)
 router.get("/languages-level", userController.getLanguageLevels);
 router.get("/type-users", userController.getUserTypes);
 router.get("/skills", userController.getSkills);

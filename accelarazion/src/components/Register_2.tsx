@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
 const Register_2: React.FC = () => {
-    const [searchParams] = useSearchParams();// Get the userId from the query parameter
-    const userId = searchParams.get("userId");
-    const navigate = useNavigate();
+  const [searchParams] = useSearchParams();// Get the userId from the query parameter
+  const email = searchParams.get("email");
+  const userId = searchParams.get("userId");
+  const navigate = useNavigate();
 
     // State for skills and selected skills
     const [skills, setSkills] = useState<Record<string, any[]> | null>(null); // Grouped by category
@@ -46,15 +47,28 @@ const Register_2: React.FC = () => {
 
   // Save selected skills
   const handleSave = async () => {
-    try {
-      await axios.post(`${apiBaseUrl}/api/user-skills`, {
-        userId,
-        skillIds: selectedSkills,
+  //   try {
+  //     await axios.post(`${apiBaseUrl}/api/user-skills`, {
+  //       userId,
+  //       skillIds: selectedSkills,
+  //     });
+  //     alert("Skills saved successfully!");
+  //     navigate("/dashboard");
+  //   } catch (error) {
+  //     console.error("Error saving skills:", error);
+  //   }
+    // };
+      try {
+      const payload = userId
+        ? { userId, skills }
+        : { email, skills };
+
+      await axios.post(`${apiBaseUrl}/api/register/skills`, payload, {
+        withCredentials: true,
       });
       alert("Skills saved successfully!");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error saving skills:", error);
+    } catch (err: any) {
+      console.error(err.response?.data?.message || "Error saving skills");
     }
   };
 
