@@ -6,11 +6,8 @@ const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
 const Dashboard = () => {
   const [userData, setUserData] = useState<any>(null);
-  const [skills, setSkills] = useState<any[]>([]);
-  const [languages, setLanguages] = useState<any[]>([]);
-    const navigate = useNavigate();
-// console.log("userData :", userData);
-
+  const [userFullData, setUserFullData] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch user data
@@ -19,6 +16,7 @@ const Dashboard = () => {
         const response = await axios.get(`${apiBaseUrl}/api/auth`, {
           withCredentials: true,
         });
+        
         setUserData(response.data.user);
         return response.data.user;
       } catch (error) {
@@ -27,77 +25,69 @@ const Dashboard = () => {
       }
     };
 
-    // Fetch skills data
-    const fetchSkills = async () => {
+    const fetchUserFullData = async (userid: number) => {
       try {
-        const response = await axios.get(`${apiBaseUrl}/api/user-skills`);
-        setSkills(response.data.skills); // Assuming backend sends an array of skills
+        console.log(`Fetching full data for userid: ${userid}...`);
+        const response = await axios.get(`${apiBaseUrl}/api/userFullData/${userid}`, {
+          withCredentials: true,
+        });
+        // console.log("Full Data Response:", response.data);
+        setUserFullData(response.data); // Store full user data
       } catch (error) {
-        console.error("Error fetching user skills:", error);
+        console.error("Error fetching full user data:", error);
+        navigate("/login");
       }
     };
 
-    // Fetch languages data
-    const fetchLanguages = async () => {
-      try {
-          const response = await axios.get(`${apiBaseUrl}/api/user-languages/${userData.userid}`);
-          console.log(response.data);
-          
-          setLanguages(response.data); // Assuming backend sends an array of languages
-      } catch (error) {
-        console.error("Error fetching user languages:", error);
-      }
-      };
-      
-    //   console.log(languages);
-      
-
-  //   fetchUserData();
-  //   fetchSkills();
-  //   fetchLanguages();
-  // }, []);
-
-  // if (!userData) {
-  //   return <p>Loading...</p>;
-  // }
-// Orchestrate data fetching
     const fetchData = async () => {
-      const user = await fetchUserData();
-      if (user?.userid) {
-        await fetchSkills();
-        await fetchLanguages();
+      const user = await fetchUserData(); // Fetch basic user data
+      // console.log("User fetched:", user);
+      if (user && user.userid) {
+        console.log(`User ID found: ${user.userid}. Fetching full data...`);
+        await fetchUserFullData(user.userid); // Fetch full user data using userid
+      } else {
+        console.error("No userid found in user data");
       }
     };
 
-    fetchData();
+    fetchData(); // Call fetchData to load both basic and full user data
   }, [navigate]);
 
-  if (!userData) {
-    return <p>Loading...</p>;
+  if (!userFullData) {
+    return <p>Loading...</p>; // Show loading state while data is fetched
   }
-
   return (
     <div>
       <h1>
-        Welcome, {userData.firstName} {userData.lastName}!
+        Welcome, {userFullData.firstName} {userFullData.lastName}!
       </h1>
       <h2>Your Details</h2>
-      <p>Email: {userData.email}</p>
-      <p>Current Country: {userData.currentCountry}</p>
-      <p>Phone number: {userData.phoneCode} {userData.phoneNumber}</p>
-      <p>Current Job Title: {userData.currentJobTitle} in Company:{" "}{userData.currentCompany}</p>
-      <p>LinkedIn Profile: {userData.linkedinProfile} - GitHub Profile:{" "}{userData.githubProfile}</p>
-      <p>You commit to make Alyah by {userData.deadline_date}</p>
-      <p>You are looking for this kind of job in Israel: {userData.israelJob}</p>
-      <p>You possess the following languages:{" "}
-        {languages.map((language) => (
-          <span key={language.id}>{language.language_name} </span>
+      <p>Email: {userFullData.email}</p>
+      <p>Current Country: {userFullData.currentCountry}</p>
+      <p>Phone number: {userFullData.phoneCode} {userFullData.phoneNumber}</p>
+      <p>Current Job Title: {userFullData.currentJobTitle} in Company: {userFullData.currentCompany}</p>
+      <p>LinkedIn Profile: {userFullData.linkedinProfile} - GitHub Profile: {userFullData.githubProfile}</p>
+      <p>You commit to make Alyah by {userFullData.commitAlyah}</p>
+      <p>You are a: {userFullData.userType}</p>
+      <p>You are looking for this kind of job in Israel: {userFullData.israelJob}</p>
+      <p> You possess the following languages:{" "}
+        {/* {userFullData.languages.map((language: any, index: number) => (
+          <span key={language.language_id}>
+            {language.language} ({language.level})
+            {index < userFullData.languages.length - 1 ? ", " : ""}
+          </span>
+        ))} */}
+        {userFullData.languages.map((language: any, index: number) => (
+        <span key={`${language.language_id}-${index}`}>
+      {language.language} ({language.level})
+      {index < userFullData.languages.length - 1 ? ", " : ""}
+        </span>
         ))}
       </p>
       <h2>Your Skills</h2>
-      {skills.length > 0 ? (
+      {userFullData.skills.length > 0 ? (
         <ul>
-          {skills.map((skill) => (
+          {userFullData.skills.map((skill: any) => (
             <li key={skill.id}>{skill.skill_name}</li>
           ))}
         </ul>

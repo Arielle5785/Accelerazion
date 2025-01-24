@@ -115,14 +115,14 @@ const Register: React.FC = () => {
       });
       const { user } = responseRegister.data;
       if (user) {
-        console.log("user", user);
+        // console.log("user", user);
         
       try {
         const responseLogin = await axios.post(`${apiBaseUrl}/api/login`, { email:formData.email, password:formData.password }, {
         withCredentials: true,
         });
         const { token } = responseLogin.data;
-        console.log("token", token);
+        // console.log("token", token);
         
         if(token){
           navigate(`/register/skills`);

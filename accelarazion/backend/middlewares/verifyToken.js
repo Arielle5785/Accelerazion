@@ -17,7 +17,7 @@ const verifyToken = (req, res, next) => {
     }
 
     /** layer - check token in db / user */
-    console.log(decode);
+    // console.log(decode);
 
     /** global type of request */
     req.user = decode;

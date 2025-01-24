@@ -24,7 +24,7 @@ app.use(
     origin: ['http://localhost:5173','https://accelerazion.onrender.com']
   })
 );
-// console.log(allRouter)
+
 app.use("/api", allRouter);
 
 
