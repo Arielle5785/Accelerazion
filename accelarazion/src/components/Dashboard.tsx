@@ -88,7 +88,7 @@ const Dashboard = () => {
       {userFullData.skills.length > 0 ? (
         <ul>
           {userFullData.skills.map((skill: any) => (
-            <li key={skill.id}>{skill.skill_name}</li>
+            <li key={skill.id}>{skill.skill_name} - {skill.category_skills}</li>
           ))}
         </ul>
       ) : (

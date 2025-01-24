@@ -317,7 +317,7 @@ module.exports = {
 
       const skills = await db("user_skills as us")
         .join("skills as s", "us.skill_id", "s.id")
-        .select("s.id as id", "s.skill_name")
+        .select("s.id as id", "s.skill_name","s.category_skills")
         .where("us.user_id", userId);
 
       user.languages = languages;
