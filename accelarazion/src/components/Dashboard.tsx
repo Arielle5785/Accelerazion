@@ -62,7 +62,7 @@ const Dashboard = () => {
         Welcome, {userFullData.firstName} {userFullData.lastName}!
       </h1>
       <h2>Your Details</h2>
-      <p>Email: {userFullData.email}</p>
+      <p>Email: {userData.email}</p>
       <p>Current Country: {userFullData.currentCountry}</p>
       <p>Phone number: {userFullData.phoneCode} {userFullData.phoneNumber}</p>
       <p>Current Job Title: {userFullData.currentJobTitle} in Company: {userFullData.currentCompany}</p>
