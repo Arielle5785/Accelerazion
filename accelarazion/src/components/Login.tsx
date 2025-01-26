@@ -24,6 +24,9 @@ const Login: React.FC = () => {
         { withCredentials: true }
       );
       const { user, token } = response.data;
+    
+      localStorage.setItem("fullDataUser",JSON.stringify(response.data.user.user) )
+  console.log("JSON full data login=>",JSON.stringify(response.data.user.user) );
       login(user, token);
       navigate("/dashboard");
     } catch (err: any) {

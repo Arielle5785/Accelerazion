@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
+import logo from "../assets/logo.png"
+import "../App.css"
 
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
@@ -74,11 +75,15 @@ const Register_2: React.FC = () => {
 
   return (
     <div className="skills-container">
-      <h2>Select Your Skills</h2>
+      <div className="logo-container">
+        <img src={logo} alt="Accelerazion Logo" className="logo" />
+      </div>
+      <h2 className="form-title">Select Your Skills</h2>
+      <div className="skills-grid">
       {skills ? (
         Object.entries(skills).map(([category, skills]) => (
-          <div key={category} className="category">
-            <h3>{category}</h3>
+          <div key={category} className="category-card">
+            <h3 className="category-title">{category}</h3>
             <div className="skills-list">
               {skills.map((skill: any) => (
                 <div key={skill.id} className="skill-item">
@@ -98,7 +103,8 @@ const Register_2: React.FC = () => {
         ))
       ) : (
         <p>Loading skills...</p>
-      )}
+        )}
+        </div>
       <div className="form-actions">
         <button onClick={handleSave}>Save</button>
         <button onClick={() => navigate("/dashboard")}>Dashboard</button>

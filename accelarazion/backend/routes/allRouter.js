@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController.js");
+const jobController = require ("../controllers/jobController.js")
 const { verifyToken } = require("../middlewares/verifyToken.js");
 const router = Router();
 // const router = express.Router();
@@ -19,8 +20,8 @@ router.post("/login", userController.loginUser);
 router.get("/all", verifyToken, userController.getUsers);
 router.post("/logout", userController.logoutUser);
 router.get("/auth", verifyToken, userController.verifyAuth);
-// router.post("/job-ads", userController.createJobAd);
-// router.get("/all-job-ads", userController.getAllJobAds);
-// router.post("/job-skills", userController.addJobSkills);
+router.post("/job-ads", jobController.createJobAd);
+// router.get("/all-job-ads", jobController.getAllJobAds);
+// router.post("/job-skills", jobController.addJobSkills);
 
 module.exports = router;

@@ -78,6 +78,8 @@ module.exports = {
     const { email, password } = req.body;
 
     try {
+      console.log(email, password, "login controller");
+      
       const user = await userModel.getUserByEmail(email);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -102,12 +104,24 @@ module.exports = {
         maxAge: 60 * 60 * 24 * 7 * 1000,
         httpOnly: true,
       });
-
-      res.status(200).json({
+      try {
+        const userFullData = await userModel.getFullData(user.id);
+        if (!userFullData) {
+          return res.status(404).json({ message: "Full Data from user not found." });
+        }
+        // console.log("user full data =>", userFullData)
+        res.status(200).json({
         message: "Login Successfully",
-        user: { userid: user.id, email: user.email, user: user },
+        user: { userid: user.id, email: user.email, user: userFullData},
         token: accessToken,
       });
+      } catch (error) {
+        console.error(error)
+        res.status(500).json({
+        message: "Internal server error from full data.",
+      });
+      }
+      
     } catch (error) {
       console.error(error);
       res.status(500).json({
@@ -195,6 +209,8 @@ module.exports = {
   },
 
   getSkills: async (req, res) => {
+    // console.log("getSkillsController =>");
+    
     try {
       const skills = await userModel.getSkills();
       res.status(200).json(skills);
@@ -235,91 +251,8 @@ module.exports = {
     }
     },
  
- // createJobAd: async (req, res) => {
-//   const {
-//     jobTitle,
-//     jobCompany,
-//     jobUrl,
-//     deadline,
-//     description,
-//     userId, // Aligned with the model
-//     userType, // Aligned with the model
-//     skills,
-//   } = req.body;
-
-//   if (!jobTitle || !jobCompany || !jobUrl || !description || !userId || !userType) {
-//     return res.status(400).json({ message: "Missing required fields" });
-//   }
-
-//   try {
-//     const jobData = {
-//       jobTitle,
-//       jobCompany,
-//       jobUrl,
-//       deadline,
-//       description,
-//       user: userId, // Correct field name for the model
-//       userType, // Correct field name for the model
-//       skills,
-//     };
-
-//     const job = await userModel.createJobAd(jobData);
-//     res.status(201).json({ message: "Job ad created successfully", jobId: job.id });
-//   } catch (error) {
-//     console.error("Error creating job ad:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// },
-
-//   addJobSkills: async (req, res) => {
-//     const { jobId, skillIds } = req.body;
-
-//     if (!jobId || !Array.isArray(skillIds)) {
-//       return res.status(400).json({ message: "Invalid data" });
-//     }
-
-//     try {
-//       await userModel.addJobSkills(jobId, skillIds);
-//       res.status(200).json({ message: "Job skills added successfully" });
-//     } catch (error) {
-//       console.error("Error adding job skills:", error);
-//       res.status(500).json({ message: "Internal server error" });
-//     }
-//   },
-
-//   getAllJobAds: async (req, res) => {
-//     try {
-//       const jobAds = await userModel.getAllJobAds();
-//       res.status(200).json(jobAds);
-//     } catch (error) {
-//       console.error("Error fetching job ads:", error);
-//       res.status(500).json({ message: "Internal server error" });
-//     }
-//   },
-//   getMatchingUsers: async (jobId) => {
-//   const query = `
-//     SELECT 
-//         u.id AS user_id, 
-//         u.name AS user_name, 
-//         COUNT(js.skill_id) AS matching_skills
-//     FROM 
-//         job_skills js
-//     JOIN 
-//         users_skills us ON js.skill_id = us.skill_id
-//     JOIN 
-//         users u ON us.user_id = u.id
-//     JOIN 
-//         users_class uc ON u.id = uc.user_id
-//     WHERE 
-//         js.job_id = ?
-//         AND uc.type_id = 1
-//     GROUP BY 
-//         u.id, u.name
-//     ORDER BY 
-//         matching_skills DESC
-//     LIMIT 10;
-//   `;
-//   const [results] = await db.execute(query, [jobId]);
-//   return results;
-// }
+ 
 };
+
+
+

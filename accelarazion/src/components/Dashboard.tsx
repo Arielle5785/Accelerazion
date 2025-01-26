@@ -94,6 +94,7 @@ const Dashboard = () => {
       ) : (
         <p>No skills added yet.</p>
       )}
+      <button type="button" onClick={() => navigate("/job-ads")}>Set up a new Job Ad</button>
     </div>
   );
 };

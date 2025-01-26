@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
-const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUser }) => {
+
+
+const JobAds: React.FC = () => {
   const navigate = useNavigate();
 
   // Check user eligibility
@@ -14,7 +16,13 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
   //     navigate("/dashboard");
   //   }
   // }, [typeUser, navigate]);
-
+  // const fullData = JSON.parse(localStorage.getItem("fullDataUser"))
+  // console.log("fulldatauser=>", fullData);
+  const fullDataString = localStorage.getItem("fullDataUser");
+  const fullData = fullDataString ? JSON.parse(fullDataString) : null;
+  
+  
+  
   // Form fields
   const [formData, setFormData] = useState({
     jobTitle: "",
@@ -24,15 +32,18 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
     description: "",
     selectedSkills: [] as number[], // Array of skill IDs
   });
-
+// console.log("Payload Validation(jobads.tsx):", {
+//   userIdType: typeof fullData.id,
+//   userTypeType: typeof fullData.typeUser,
+//   skillsType: Array.isArray(formData.selectedSkills),
+// });
   const [skills, setSkills] = useState<Record<string, any[]> | null>(null);
 
   // Fetch skills data
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        // const response = await axios.get(`${apiBaseUrl}/api/skills`);
-        const response = await axios.get(`${apiBaseUrl}skills`);
+        const response = await axios.get(`${apiBaseUrl}/api/skills`);
         const groupedSkills = response.data.reduce((acc: any, skill: any) => {
           if (!acc[skill.category_skills]) {
             acc[skill.category_skills] = [];
@@ -68,33 +79,47 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
   // Submit job ad
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+      if (!fullData || !fullData.id || !fullData.userType) {
+    alert("User data is missing. Please log in again.");
+    return;
+  }
     try {
+      
       // Create the job ad
-      // const response = await axios.post(`${apiBaseUrl}/api/job-ads`, {
-        const response = await axios.post(`${apiBaseUrl}/job-ads`, {
+      // console.log('formdata', formData)
+      const response = await axios.post(`${apiBaseUrl}/api/job-ads`, {
+        
         jobTitle: formData.jobTitle,
         jobCompany: formData.jobCompany,
         jobUrl: formData.jobUrl,
         deadline: formData.deadline,
         description: formData.description,
-        user: userId, // Pass userId as the sponsor
-        userType: typeUser, // Pass the type of the user
+        userId: Number(fullData.id),
+        userType: Number(fullData.typeUser),
+        skills: formData.selectedSkills.map((skillId) => Number(skillId))
       });
-
+// console.log("Request Body for Job Ad (jobad.tsx):", {
+//   jobTitle: formData.jobTitle,
+//   jobCompany: formData.jobCompany,
+//   jobUrl: formData.jobUrl,
+//   deadline: formData.deadline,
+//   description: formData.description,
+//   userId: fullData.id,
+//   userType: fullData.typeUser,
+//   skills: formData.selectedSkills,
+// });
       const jobId = response.data.jobId;
 
       // Link selected skills to the job ad
       if (formData.selectedSkills.length > 0) {
-        // await axios.post(`${apiBaseUrl}/api/job-skills`, {
-        await axios.post(`${apiBaseUrl}/job-skills`, {
+        await axios.post(`${apiBaseUrl}/api/job-skills`, {
           jobId,
           skillIds: formData.selectedSkills,
         });
       }
 
       alert("Job ad created successfully!");
-      navigate("/dashboard");
+      // navigate("/dashboard");
     } catch (error) {
       console.error("Error creating job ad:", error);
       alert("Failed to create job ad. Please try again.");
