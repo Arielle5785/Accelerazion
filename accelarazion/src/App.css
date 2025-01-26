@@ -8,13 +8,13 @@ body, html {
 
 main {
   padding-top: 80px;
-  max-width: 5000px; /* To prevent content from overlapping the Navbar */
+  /* width: 5000px;  */
 }
 
 /* Hero Section */
 .hero {
   position: relative;
-  width: 100%;
+  width: 120%;
   height: 100vh;
   background: url("../assets/background.jpg") no-repeat center center/cover;
 }
@@ -25,7 +25,7 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  /* background: rgba(230, 227, 227, 0.6); */
 }
 
 .hero-content {
@@ -72,7 +72,7 @@ main {
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   position: fixed;
-  width: 100%;
+  width: 95%;
   top: 0;
   left: 0;
   z-index: 1000;
@@ -114,7 +114,7 @@ main {
 
 /* Register Container */
 .register-container {
-  width: 100%; /* Adjusted width */
+  width: 170%; /* Adjusted width */
   /* margin: 2rem auto; Centered on the page */
   margin: 0 auto;
   padding: 2rem 1rem;
@@ -160,7 +160,7 @@ main {
 
 /* Form Group */
 .form-group {
-  /* flex: 1 1 calc(20%- 1rem); */
+  flex: 1 1 calc(20%- 1rem);
   /* min-width: 150px; */
   display: flex;
   flex-direction: column;

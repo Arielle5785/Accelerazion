@@ -31,7 +31,8 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await axios.get(`${apiBaseUrl}/api/skills`);
+        // const response = await axios.get(`${apiBaseUrl}/api/skills`);
+        const response = await axios.get(`${apiBaseUrl}skills`);
         const groupedSkills = response.data.reduce((acc: any, skill: any) => {
           if (!acc[skill.category_skills]) {
             acc[skill.category_skills] = [];
@@ -70,7 +71,8 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
 
     try {
       // Create the job ad
-      const response = await axios.post(`${apiBaseUrl}/api/job-ads`, {
+      // const response = await axios.post(`${apiBaseUrl}/api/job-ads`, {
+        const response = await axios.post(`${apiBaseUrl}/job-ads`, {
         jobTitle: formData.jobTitle,
         jobCompany: formData.jobCompany,
         jobUrl: formData.jobUrl,
@@ -84,7 +86,8 @@ const JobAds: React.FC<{ userId: number; typeUser: string }> = ({ userId, typeUs
 
       // Link selected skills to the job ad
       if (formData.selectedSkills.length > 0) {
-        await axios.post(`${apiBaseUrl}/api/job-skills`, {
+        // await axios.post(`${apiBaseUrl}/api/job-skills`, {
+        await axios.post(`${apiBaseUrl}/job-skills`, {
           jobId,
           skillIds: formData.selectedSkills,
         });
