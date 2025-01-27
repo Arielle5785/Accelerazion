@@ -10,7 +10,7 @@ module.exports = {
             // const skills = getSkills();
             // const user = getFullData();
             console.log("Job Data for insert jobModels:", jobData);
-            const job = await trx("job_ads").insert(
+            const [job] = await trx("job_ads").insert(
                 {
                     job_title: jobData.jobTitle,
                     job_company: jobData.jobCompany,

@@ -1,9 +1,9 @@
 /* Global Reset */
 body, html {
-  margin: 0;
-  padding: 0;
+  margin: 10px;
+  padding: 10px;
   font-family: Arial, sans-serif;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
 }
 
 main {
@@ -42,7 +42,7 @@ main {
 }
 
 .hero-content h1 {
-  font-size: 3rem;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 1.5rem;
 }
@@ -67,11 +67,11 @@ main {
 .navbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items:start;
   padding: 1rem 2rem;
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  position: fixed;
+  /* position: fixed; */
   width: 95%;
   top: 0;
   left: 0;
@@ -80,6 +80,7 @@ main {
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 
@@ -105,6 +106,7 @@ main {
   color: #333;
   font-size: 1rem;
   font-weight: bold;
+  align-self: center; 
   cursor: pointer;
 }
 
@@ -114,29 +116,37 @@ main {
 
 /* Register Container */
 .register-container {
-  width: 170%; /* Adjusted width */
+  width: 100%; /* Adjusted width */
   /* margin: 2rem auto; Centered on the page */
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  margin: 2rem auto;
+  padding: 2rem ;
   background-color: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 /* Logo */
 .logo-container {
   text-align: center;
-  margin-bottom: 1.5rem;
+  /* margin-bottom: 1.5rem; */
+  width: 500px;
 }
 
 .logo {
-  width: 200px;
+  /* width: 450%;
   height: auto;
+  cursor:pointer */
+  display: block;
+  margin: 0 auto 1rem;
+  text-align:left;
+  /* font-size: 1.5rem; */
+  /* font-weight: bold; */
+  /* color: #333; */
 }
 
 /* Form Title */
 .form-title {
-  font-size: 2rem;
+  font-size: 1.8rem;
   text-align: center;
   margin-bottom: 2rem;
   font-weight: bold;
@@ -145,25 +155,26 @@ main {
 
 /* Form Grid */
 .form-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  flex-direction:row;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
 /* Form Row */
 .form-row {
-  display: flex;
-  flex-wrap: wrap;
+  display:grid;
+  /* flex:; */
   gap: 1rem;
   justify-content: space-between;
 }
 
 /* Form Group */
 .form-group {
-  flex: 1 1 calc(20%- 1rem);
-  /* min-width: 150px; */
-  display: flex;
-  flex-direction: column;
+  flex: 1 1 calc(33%- 1rem);
+  min-width: 150px;
+  display: grid;
+  flex-direction: row;
 }
 
 .form-label {
@@ -180,9 +191,17 @@ main {
   font-size: 1rem;
   width: 100%;
 }
+.full-width {
+  grid-column: span 3;
+}
+.language-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
 
 /* Buttons */
-.add-btn {
+/* .add-btn {
   padding: 0.5rem 1rem;
   background-color: #007bff;
   color: white;
@@ -209,7 +228,27 @@ main {
 
 .submit-btn:hover {
   background-color: #218838;
+} */
+ button{
+  size: small;
+  padding: 10px; 
+  margin: 10px;
+  font-size: 0.9rem;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block; /* Prevents buttons from stretching to full width */
+ }
+ button:hover {
+  background-color: #0056b3;
 }
+
+/* .form-actions button {
+  width: auto; /* Ensures buttons don't stretch unnecessarily */
+  /* margin: 0 0.5rem; /* Adds spacing between buttons */
+/* } */
 
 .skills-container {
   padding: 2rem;
@@ -218,12 +257,12 @@ main {
 }
 
 .logo-container {
-  text-align: center;
+  text-align: left;
   margin-bottom: 1.5rem;
 }
 
 .logo {
-  width: 100px;
+  width: 300px;
   height: auto;
 }
 

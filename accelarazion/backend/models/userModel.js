@@ -83,7 +83,7 @@ module.exports = {
         });
   
         await trx.commit();
-        return user;
+        return { ...user, userType: userType.id};
       } catch (error) {
         await trx.rollback();
         console.error(error);
@@ -157,10 +157,16 @@ module.exports = {
   
     getUserByEmail: async (email) => {
       try {
-        const user = await db("users")
-          .select("id", "email", "password_hash")
-          .where({ email: email.toLowerCase() })
-          .first();
+        // make the join
+        // const user = await db("users")
+        //   .select("id", "email", "password_hash")
+        //   .where({ email: email.toLowerCase() })
+        //   .first();
+      const user = await db("users as u")
+      .join("users_class as uc", "u.id", "uc.user_id") // Join to get type_id
+      .select("u.id", "u.email", "u.password_hash", "uc.type_id") // Include type_id in the selection
+      .where("u.email", email.toLowerCase()) // Ensure email is case-insensitive
+      .first(); // Get the first matching user
         return user;
       } catch (error) {
         throw error;

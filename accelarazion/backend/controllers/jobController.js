@@ -34,6 +34,8 @@ module.exports = {
     };
 
     const job = await jobModels.createJobAd(jobData);
+    console.log('job=>',job.id);
+    
     res.status(201).json({ message: "Job ad created successfully", jobId: job.id });
   } catch (error) {
     console.error("Error creating job ad:", error);
@@ -43,6 +45,7 @@ module.exports = {
 
   addJobSkills: async (req, res) => {
     const { jobId, skillIds } = req.body;
+console.log(req.body);
 
     if (!jobId || !Array.isArray(skillIds)) {
       return res.status(400).json({ message: "Invalid data" });

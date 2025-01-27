@@ -75,8 +75,8 @@ module.exports = {
   },
 
   loginUser: async (req, res) => {
+    // const { email, password } = req.body;
     const { email, password } = req.body;
-
     try {
       console.log(email, password, "login controller");
       
@@ -105,14 +105,17 @@ module.exports = {
         httpOnly: true,
       });
       try {
-        const userFullData = await userModel.getFullData(user.id);
-        if (!userFullData) {
-          return res.status(404).json({ message: "Full Data from user not found." });
-        }
+        // no need
+        // const userFullData = await userModel.getFullData(user.id);
+        // if (!userFullData) {
+        //   return res.status(404).json({ message: "Full Data from user not found." });
+        // }
         // console.log("user full data =>", userFullData)
+        ///
         res.status(200).json({
-        message: "Login Successfully",
-        user: { userid: user.id, email: user.email, user: userFullData},
+          message: "Login Successfully",
+          user: { userid: user.id, email: user.email, type: user.type_id},
+        // user: { userid: user.id, email: user.email, user: userFullData},
         token: accessToken,
       });
       } catch (error) {
@@ -222,7 +225,8 @@ module.exports = {
 
   addUserSkills: async (req, res) => {
     const { userId, skillIds } = req.body;
-
+    console.log("Request Body:(usercontroller)", req.body);
+    console.log("userid usercontroller.js:", userId, "skillsid:", skillIds)
     if (!userId || !Array.isArray(skillIds)) {
       return res.status(400).json({ message: "Invalid data" });
     }

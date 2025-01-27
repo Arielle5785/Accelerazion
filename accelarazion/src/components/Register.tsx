@@ -2,7 +2,7 @@ import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-// import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../auth/useAuth";
 
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
@@ -104,7 +104,7 @@ const Register: React.FC = () => {
     };
   });
   };
-  
+  const { login } = useAuth();
   // Submit form
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
@@ -116,16 +116,24 @@ const Register: React.FC = () => {
       });
       const { user } = responseRegister.data;
       if (user) {
-        // console.log("user", user);
+        console.log("responseRegister", user);
         
-      try {
+        try {
+        
         const responseLogin = await axios.post(`${apiBaseUrl}/api/login`, { email:formData.email, password:formData.password }, {
         withCredentials: true,
         });
-        const { token } = responseLogin.data;
-        // console.log("token", token);
+        // console.log('responseLogin.data',responseLogin.data);
+          // const { token, user } = responseLogin.data;
+          const { token, user: loggedInUser } = responseLogin.data;
         
-        if(token){
+
+        // console.log("token", token);
+
+        
+        if (token) {
+          // login(user, token);
+          login(loggedInUser, token);
           navigate(`/register/skills`);
         }
         
@@ -189,7 +197,7 @@ const Register: React.FC = () => {
         </div>
            
         {/* User Type */}
-<div className="form-row">
+{/* <div className="form-row"> */}
   <div className="form-group">
     <label htmlFor="userType" className="form-label">
       User Type
@@ -226,7 +234,7 @@ const Register: React.FC = () => {
   />
 </div>
 </div>
-</div>
+{/* </div> */}
 {/* Contact Info */}
 <div className="form-row">
   <div className="form-group">
@@ -345,7 +353,8 @@ const Register: React.FC = () => {
   </div>
 </div>
 
-{/* Commitment */}
+        {/* Commitment */}
+        <div className="form-row">
 <div className="form-group">
   <label htmlFor="commitAlyah" className="form-label">
     Commit to Alyah
@@ -360,10 +369,6 @@ const Register: React.FC = () => {
   />
 </div>
 
-{/* Date of Birth */}
-
-
-{/* Looking for Job */}
 <div className="form-group">
   <label htmlFor="israelJob" className="form-label">
     Looking for a job in Israel
@@ -393,7 +398,7 @@ const Register: React.FC = () => {
     required
   />
 </div>
-
+</div>
 {/* Languages */}
 <div className="form-row">
   {formData.languages.map((lang, index) => (
@@ -441,13 +446,13 @@ const Register: React.FC = () => {
     </div>
   ))}
 </div>
-
-
-        <button type="button" onClick={addLanguage}>
+        <div>
+          <button type="button" onClick={addLanguage}>
           + Add Language
-        </button>
-        <button type="submit">Save and Add Skills</button>
-        {error && <div className="error-message">{error}</div>}
+          </button>
+          <button type="submit">Save and Add Skills</button>
+          {error && <div className="error-message">{error}</div>}
+          </div>
       </form>
     </div>
   );

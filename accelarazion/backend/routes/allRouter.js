@@ -11,7 +11,7 @@ router.get("/languages", userController.getLanguages);
 router.get("/languages-level", userController.getLanguageLevels);
 router.get("/type-users", userController.getUserTypes);
 router.get("/skills", userController.getSkills);
-router.post("/skills/:userid", userController.addUserSkills);
+router.post("/register/skills", userController.addUserSkills);
 router.get("/userFullData/:userid", userController.getFullData);
 // router.get("/user-languages/:userid", userController.getLanguagesByUserID)
 // router.get("/user-skills/:userid", userController.getUserSkillsByUserID);
@@ -22,6 +22,6 @@ router.post("/logout", userController.logoutUser);
 router.get("/auth", verifyToken, userController.verifyAuth);
 router.post("/job-ads", jobController.createJobAd);
 // router.get("/all-job-ads", jobController.getAllJobAds);
-// router.post("/job-skills", jobController.addJobSkills);
+router.post("/job-skills", jobController.addJobSkills);
 
 module.exports = router;

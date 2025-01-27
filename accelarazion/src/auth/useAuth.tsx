@@ -13,9 +13,11 @@ const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL;
 interface User {
   id: string;
   email: string;
+  type:number
 }
 
 interface AuthContextType {
+  // id: number;
   isAuthenticated: boolean;
   user: User | null;
   token: string | null;
@@ -93,6 +95,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <AuthContext.Provider
       value={{
+        // id,
         isAuthenticated,
         user,
         token,
