@@ -115,7 +115,7 @@ const JobAds: React.FC = () => {
       });
 
       const jobId = response.data.id;
-console.log('response.data=>',response.data);
+console.log('response.data=>',response.data, "jobID (jobads)", jobId);
 
       // Link selected skills to the job ad
       // if (formData.selectedSkills.length > 0) {
