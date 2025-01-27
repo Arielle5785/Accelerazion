@@ -8,6 +8,7 @@ const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
+  
 
   // Form fields
   const [formData, setFormData] = useState({
@@ -116,7 +117,7 @@ const Register: React.FC = () => {
       });
       const { user } = responseRegister.data;
       if (user) {
-        console.log("responseRegister", user);
+        // console.log("responseRegister", user);
         
         try {
         
@@ -124,16 +125,16 @@ const Register: React.FC = () => {
         withCredentials: true,
         });
         // console.log('responseLogin.data',responseLogin.data);
-          // const { token, user } = responseLogin.data;
-          const { token, user: loggedInUser } = responseLogin.data;
+          const { token, user } = responseLogin.data;
+          // const { token, user: loggedInUser } = responseLogin.data;
         
 
         // console.log("token", token);
 
         
         if (token) {
-          // login(user, token);
-          login(loggedInUser, token);
+          login(user, token);
+          // login(loggedInUser, token);
           navigate(`/register/skills`);
         }
         

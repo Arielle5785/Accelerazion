@@ -147,6 +147,8 @@ module.exports = {
       const userSkills = skillIds.map((skillId) => ({
         user_id: userId,
         skill_id: skillId,
+        // user_id: parseInt(userId, 10), 
+        // skill_id: parseInt(skillId, 10),
       }));
       await db("user_skills").insert(userSkills);
     } catch (error) {

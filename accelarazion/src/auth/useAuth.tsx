@@ -11,7 +11,7 @@ const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL;
 
 // Define types for Auth Context
 interface User {
-  id: string;
+  id: string |number;
   email: string;
   type:number
 }

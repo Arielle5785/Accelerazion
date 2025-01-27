@@ -78,7 +78,7 @@ module.exports = {
     // const { email, password } = req.body;
     const { email, password } = req.body;
     try {
-      console.log(email, password, "login controller");
+      // console.log(email, password, "login controller");
       
       const user = await userModel.getUserByEmail(email);
       if (!user) {
@@ -224,15 +224,16 @@ module.exports = {
   },
 
   addUserSkills: async (req, res) => {
-    const { userId, skillIds } = req.body;
-    console.log("Request Body:(usercontroller)", req.body);
-    console.log("userid usercontroller.js:", userId, "skillsid:", skillIds)
-    if (!userId || !Array.isArray(skillIds)) {
+    // const { userId, skillIds } = req.body;
+       const { userId, skills } = req.body;
+    console.log("Request Body:(addUserSkills usercontroller)", req.body);
+    console.log("userid usercontroller.js:", userId, "skillsid:", skills)
+    if (!userId || !Array.isArray(skills)) {
       return res.status(400).json({ message: "Invalid data" });
     }
 
     try {
-      await userModel.addUserSkills(userId, skillIds);
+      await userModel.addUserSkills(userId, skills);
       res.status(200).json({ message: "Skills saved successfully" });
     } catch (error) {
       console.error("Error saving user skills:", error);
