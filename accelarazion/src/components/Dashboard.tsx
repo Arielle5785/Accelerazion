@@ -18,8 +18,8 @@ const Dashboard = () => {
 
     const fetchUserFullData = async () => {
       try {
-        console.log(`Fetching full data for user ID: ${user.id}...`);
-        const response = await axios.get(`${apiBaseUrl}/api/userFullData/${user.id}`, {
+        console.log(`Fetching full data for user ID: ${user.userid}...`);
+        const response = await axios.get(`${apiBaseUrl}/api/userFullData/${user.userid}`, {
           withCredentials: true,
         });
         setUserFullData(response.data);
@@ -30,7 +30,7 @@ const Dashboard = () => {
     };
 
     fetchUserFullData(); // Fetch full user data
-  }, [isAuthenticated, user, navigate]);
+  }, []);
 
   if (!userFullData) {
     return <p>Loading...</p>; // Show loading state while data is fetched

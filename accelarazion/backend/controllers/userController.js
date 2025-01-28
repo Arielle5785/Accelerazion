@@ -78,7 +78,7 @@ module.exports = {
     // const { email, password } = req.body;
     const { email, password } = req.body;
     try {
-      // console.log(email, password, "login controller");
+      console.log(email, password, "login controller");
       
       const user = await userModel.getUserByEmail(email);
       if (!user) {
@@ -91,10 +91,10 @@ module.exports = {
       }
 
       const { JWT_SECRET } = process.env;
-
+console.log(user);
       // Generate a token
       const accessToken = jwt.sign(
-        { userid: user.id, email: user.email },
+        { userid: user.id, email: user.email, type:user.type_id },
         JWT_SECRET,
         { expiresIn: "7d" }
       );
@@ -151,11 +151,11 @@ module.exports = {
   },
 
   verifyAuth: (req, res) => {
-    const { userid, email } = req.user;
+    const { userid, email, type } = req.user;
     const { JWT_SECRET } = process.env;
 
     // Refresh the token
-    const newAccessToken = jwt.sign({ userid, email }, JWT_SECRET, {
+    const newAccessToken = jwt.sign({ userid, email, type }, JWT_SECRET, {
       expiresIn: "30m",
     });
 
@@ -166,7 +166,7 @@ module.exports = {
 
     res.json({
       message: "verified",
-      user: { userid, email },
+      user: { userid, email, type },
       token: newAccessToken,
     });
   },
@@ -225,15 +225,15 @@ module.exports = {
 
   addUserSkills: async (req, res) => {
     // const { userId, skillIds } = req.body;
-       const { userId, skill } = req.body;
+       const { userId, skillIds } = req.body;
     console.log("Request Body:(addUserSkills usercontroller)", req.body);
-    console.log("userid usercontroller.js:", userId, "skillsid:", skill)
-    if (!userId || !Array.isArray(skill)) {
+    console.log("userid usercontroller.js:", userId, "skillsid:", skillIds)
+    if (!userId || !Array.isArray(skillIds)) {
       return res.status(400).json({ message: "Invalid data" });
     }
 
     try {
-      await userModel.addUserSkills(userId, skill);
+      await userModel.addUserSkills(userId.userid, skillIds);
       res.status(200).json({ message: "Skills saved successfully" });
     } catch (error) {
       console.error("Error saving user skills:", error);

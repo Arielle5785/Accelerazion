@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController.js");
-const jobController = require ("../controllers/jobController.js")
+const jobController = require("../controllers/jobController.js");
 const { verifyToken } = require("../middlewares/verifyToken.js");
 const router = Router();
 // const router = express.Router();

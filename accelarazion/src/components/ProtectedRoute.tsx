@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   useEffect(() => {
     refreshAuth();
-  }, [refreshAuth]);
+  }, []);
 
   if (loading) {
     return <div className="loading">Loading</div>;

@@ -1,0 +1,20 @@
+SELECT 
+    u.id AS user_id,
+    u.first_name || ' ' || u.last_name AS user_name,
+    COUNT(js.skills_id) AS matching_skills
+FROM 
+    job_skills AS js
+JOIN 
+    user_skills AS us ON js.skills_id = us.skill_id -- Match skills between jobs and users
+JOIN 
+    users AS u ON us.user_id = u.id -- Get user details
+JOIN 
+    users_class AS uc ON u.id = uc.user_id -- Ensure the user is a mentee
+WHERE 
+    js.job_id = 4 -- Match job ID
+    AND uc.type_id = 1 -- Ensure the user is a mentee
+GROUP BY 
+    u.id, u.first_name, u.last_name
+ORDER BY 
+    matching_skills DESC -- Sort by the number of matching skills
+LIMIT 10; -- Get the top 10 users

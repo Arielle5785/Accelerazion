@@ -5,8 +5,8 @@ import { useAuth } from "../auth/useAuth";
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
 const JobAds: React.FC = () => {
-  const user = useAuth();
-  // console.log("usr (jobads", user);
+  const {user} = useAuth();
+  console.log(user);
   
   const navigate = useNavigate();  
   
@@ -70,7 +70,7 @@ const JobAds: React.FC = () => {
     try {
       
       // Create the job ad
-      // console.log('formdata', formData)
+      // console.log('formdata', formData)z
       const response = await axios.post(`${apiBaseUrl}/api/job-ads`, {
         
         jobTitle: formData.jobTitle,
@@ -78,8 +78,8 @@ const JobAds: React.FC = () => {
         jobUrl: formData.jobUrl,
         deadline: formData.deadline,
         description: formData.description,
-        userId: Number(user.user?.id),
-        userType: Number(user.user?.type),
+        userId: user?.userid,
+        userType: user?.type,
         skills: formData.selectedSkills.map((skillId) => Number(skillId))
       });
 
