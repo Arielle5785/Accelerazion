@@ -1,28 +1,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-// import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/useAuth";
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 
-
-
 const JobAds: React.FC = () => {
-  // const navigate = useNavigate();
-
-  // Check user eligibility
-  // useEffect(() => {
-  //   if (!["Mentor", "Sponsor", "Admin"].includes(typeUser)) {
-  //     alert("You are not authorized to create job ads.");
-  //     navigate("/dashboard");
-  //   }
-  // }, [typeUser, navigate]);
-  // const fullData = JSON.parse(localStorage.getItem("fullDataUser"))
-  // console.log("fulldatauser=>", fullData);
-  const fullDataString = localStorage.getItem("fullDataUser");
-  const fullData = fullDataString ? JSON.parse(fullDataString) : null;
+  const user = useAuth();
+  // console.log("usr (jobads", user);
   
-// console.log("Full Data from localStorage (jobAds.tsx):", fullData);
-  
+  const navigate = useNavigate();  
   
   // Form fields
   const [formData, setFormData] = useState({
@@ -34,22 +20,7 @@ const JobAds: React.FC = () => {
     description: "",
     selectedSkills: [] as number[], // Array of skill IDs
   });
-// console.log("Payload Validation(jobads.tsx):", {
-//   userIdType: typeof fullData.id,
-//   userTypeType: typeof fullData.typeUser,
-//   skillsType: Array.isArray(formData.selectedSkills),
-//   });
-//   console.log("Payload sent to API:", {
-//   jobTitle: formData.jobTitle,
-//   jobCompany: formData.jobCompany,
-//   jobUrl: formData.jobUrl,
-//   deadline: formData.deadline,
-//   description: formData.description,
-//   userId: Number(fullData.id),
-//     // userType: Number(fullData.typeUser),
-//   userType: fullData.typeUser,
-//   skills: formData.selectedSkills.map((skillId) => Number(skillId)),
-// });
+
   const [skills, setSkills] = useState<Record<string, any[]> | null>(null);
 
   // Fetch skills data
@@ -92,8 +63,7 @@ const JobAds: React.FC = () => {
   // Submit job ad
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullData || !fullData.id || !fullData.userType) {
-    // if (!fullData || !fullData.id) {
+    if (!user) {
     alert("User data is missing. Please log in again.");
     return;
   }
@@ -108,22 +78,13 @@ const JobAds: React.FC = () => {
         jobUrl: formData.jobUrl,
         deadline: formData.deadline,
         description: formData.description,
-        userId: Number(fullData.id),
-        // userType: Number(fullData.typeUser),
-        userType: 1,
+        userId: Number(user.user?.id),
+        userType: Number(user.user?.type),
         skills: formData.selectedSkills.map((skillId) => Number(skillId))
       });
 
       const jobId = response.data.id;
-console.log('response.data=>',response.data, "jobID (jobads)", jobId);
-
-      // Link selected skills to the job ad
-      // if (formData.selectedSkills.length > 0) {
-      //   await axios.post(`${apiBaseUrl}/api/job-skills`, {
-      //     jobId,
-      //     skillIds: formData.selectedSkills,
-      //   });
-      // }
+      console.log('response.data=>',response.data, "jobID (jobads)", jobId);
 
       alert("Job ad created successfully!");
       // navigate("/dashboard");
@@ -212,9 +173,9 @@ console.log('response.data=>',response.data, "jobID (jobads)", jobId);
 
         <div className="form-actions">
           <button type="submit">Save Job Ad</button>
-          {/* <button type="button" onClick={() => navigate("/dashboard")}>
-            Dashboard */}
-          {/* </button> */}
+          <button type="button" onClick={() => navigate("/")}>
+            Home
+          </button>
         </div>
       </form>
     </div>

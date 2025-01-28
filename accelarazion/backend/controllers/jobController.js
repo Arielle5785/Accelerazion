@@ -16,7 +16,7 @@ module.exports = {
     userType, // Aligned with the model
     skills,
   } = req.body;
-// console.log("Received Request Body(jobController.js):", req.body);
+console.log("Received Request Body(jobController.js):", req.body);
   if (!jobTitle || !jobCompany || !jobUrl || !description || !userId || !userType) {
     return res.status(400).json({ message: "Missing required fields" });
   }
