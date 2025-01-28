@@ -14,7 +14,7 @@ main {
 /* Hero Section */
 .hero {
   position: relative;
-  width: 120%;
+  width: 200%;
   height: 100vh;
   background: url("../assets/background.jpg") no-repeat center center/cover;
 }
@@ -72,7 +72,7 @@ main {
   background-color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   /* position: fixed; */
-  width: 95%;
+  width: 190%;
   top: 0;
   left: 0;
   z-index: 1000;
@@ -127,7 +127,7 @@ main {
 
 /* Logo */
 .logo-container {
-  text-align: center;
+  text-align: left;
   /* margin-bottom: 1.5rem; */
   width: 500px;
 }
@@ -136,9 +136,9 @@ main {
   /* width: 450%;
   height: auto;
   cursor:pointer */
-  display: block;
-  margin: 0 auto 1rem;
-  text-align:left;
+  display:left;
+  /* margin: 0 auto 1rem; */
+  /* text-align:left; */
   /* font-size: 1.5rem; */
   /* font-weight: bold; */
   /* color: #333; */

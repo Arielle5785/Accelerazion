@@ -225,15 +225,15 @@ module.exports = {
 
   addUserSkills: async (req, res) => {
     // const { userId, skillIds } = req.body;
-       const { userId, skills } = req.body;
+       const { userId, skill } = req.body;
     console.log("Request Body:(addUserSkills usercontroller)", req.body);
-    console.log("userid usercontroller.js:", userId, "skillsid:", skills)
-    if (!userId || !Array.isArray(skills)) {
+    console.log("userid usercontroller.js:", userId, "skillsid:", skill)
+    if (!userId || !Array.isArray(skill)) {
       return res.status(400).json({ message: "Invalid data" });
     }
 
     try {
-      await userModel.addUserSkills(userId, skills);
+      await userModel.addUserSkills(userId, skill);
       res.status(200).json({ message: "Skills saved successfully" });
     } catch (error) {
       console.error("Error saving user skills:", error);
