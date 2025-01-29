@@ -78,7 +78,7 @@ module.exports = {
     // const { email, password } = req.body;
     const { email, password } = req.body;
     try {
-      console.log(email, password, "login controller");
+      // console.log(email, password, "login controller");
       
       const user = await userModel.getUserByEmail(email);
       if (!user) {
@@ -91,7 +91,7 @@ module.exports = {
       }
 
       const { JWT_SECRET } = process.env;
-console.log(user);
+      console.log(user);
       // Generate a token
       const accessToken = jwt.sign(
         { userid: user.id, email: user.email, type:user.type_id },

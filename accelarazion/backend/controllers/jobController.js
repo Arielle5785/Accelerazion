@@ -1,6 +1,3 @@
-// const jobModel = require("../models/jobModels.js");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
 const jobModels = require("../models/jobModels.js");
 require("dotenv").config();
 
@@ -42,7 +39,7 @@ module.exports = {
       };
 
       const job = await jobModels.createJobAd(jobData);
-      console.log("job=>", job.id);
+      // console.log("job=>", job.id);
 
       res
         .status(201)
@@ -76,33 +73,39 @@ module.exports = {
         res.status(200).json(jobAds);
       } catch (error) {
         console.error("Error fetching job ads:", error);
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Internal server error GAJ" });
       }
     },
-  //   getMatchingUsers: async (jobId) => {
-  //   const query = `
-  //     SELECT
-  //         u.id AS user_id,
-  //         u.name AS user_name,
-  //         COUNT(js.skill_id) AS matching_skills
-  //     FROM
-  //         job_skills js
-  //     JOIN
-  //         users_skills us ON js.skill_id = us.skill_id
-  //     JOIN
-  //         users u ON us.user_id = u.id
-  //     JOIN
-  //         users_class uc ON u.id = uc.user_id
-  //     WHERE
-  //         js.job_id = ?
-  //         AND uc.type_id = 1
-  //     GROUP BY
-  //         u.id, u.name
-  //     ORDER BY
-  //         matching_skills DESC
-  //     LIMIT 10;
-  //   `;
-  //   const [results] = await db.execute(query, [jobId]);
-  //   return results;
-  // }
+    getMatchingUsers: async (req,res) => {
+    try {
+        const jobAds = await jobModels.getMatchingUsers();
+        res.status(200).json(jobAds);
+      } catch (error) {
+        console.error("Error fetching candidates or job ads:", error);
+        res.status(500).json({ message: "Internal server error GM controller" });
+      }
+    },
+    getJobDetails: async (req, res) => {
+      const { jobid } = req.params; 
+      // console.log("req params jobController", res);
+      
+    try {
+    const job = await jobModels.getJobDetails(jobid);
+    res.status(200).json(job);
+    } catch (error) {
+    console.error("Error fetching job details:", error);
+    res.status(500).json({ message: "Internal server error GJD" });
+    }
+    },
+  getMatchingUsers: async (req, res) => {
+    const { jobid } = req.params; // Using job_id
+    try {
+    const candidates = await jobModels.getMatchingUsers(jobid);
+    res.status(200).json(candidates);
+    } catch (error) {
+    console.error("Error fetching matching candidates:", error);
+    res.status(500).json({ message: "Internal server error GMU" });
+    }
+  },
+
 };

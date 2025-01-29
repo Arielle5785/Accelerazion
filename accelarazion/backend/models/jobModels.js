@@ -82,66 +82,77 @@ module.exports = {
     console.error("Error fetching job ads:", error);
     throw error;
   }
-}
+    },  
+  getMatchingUsers: async (jobid) => {
+  try {
+    const results = await db("users as u")
+      .join("user_skills as us", "u.id", "us.user_id")
+      .join("job_skills as js", "us.skill_id", "js.skills_id")
+      .join("users_class as uc", "u.id", "uc.user_id")
+      .select(
+        "u.id as user_id", "u.phone_number as user_phone_number", "u.email as user_email",
+          db.raw("CONCAT(u.first_name, ' ', u.last_name) as user_name"),
+          db.raw("COUNT(js.skills_id) as matching_skills")
+      )
+      .where("js.job_id", jobid)
+      .andWhere("uc.type_id", 1) // Ensuring we filter only mentees
+      .groupBy("u.id")
+      .orderBy("matching_skills", "desc")
+      .limit(10);
 
-    // getAllJobAds: async () => {
-    //     try {
-    //         const jobAds = await db("jobs_ad as j")
-    //             .join("users as u", "j.sponsor_id", "u.id")
-    //             .leftJoin("job_skills as js", "j.id", "js.job_id")
-    //             .leftJoin("skills as s", "js.skill_id", "s.id")
-    //             .select(
-    //                 "j.id as job_id",
-    //                 "j.job_title",
-    //                 "j.job_company",
-    //                 "j.job_url",
-    //                 "j.created_date",
-    //                 "j.deadline",
-    //                 "u.first_name as sponsor_first_name",
-    //                 "u.last_name as sponsor_last_name",
-    //                 "u.email as sponsor_email",
-    //                 "u.phone_number as sponsor_phone",
-    //                 db.raw("json_agg(s.skill_name) as required_skills")
-    //             )
-    //             .groupBy("j.id", "u.id");
-  
-    //         return jobAds;
-    //     } catch (error) {
-    //         console.error("Error fetching job ads:", error);
-    //         throw error;
-    //     }
-    // },
-  
-    // getMatchingUsers: async (jobId) => {
-    //     try {
-    //         const query = `
-    //       SELECT 
-    //         u.id AS user_id, 
-    //         u.first_name || ' ' || u.last_name AS user_name, 
-    //         COUNT(js.skill_id) AS matching_skills
-    //       FROM 
-    //         job_skills js
-    //       JOIN 
-    //         users_skills us ON js.skill_id = us.skill_id
-    //       JOIN 
-    //         users u ON us.user_id = u.id
-    //       JOIN 
-    //         users_class uc ON u.id = uc.user_id
-    //       WHERE 
-    //         js.job_id = ?
-    //         AND uc.type_id = 1
-    //       GROUP BY 
-    //         u.id
-    //       ORDER BY 
-    //         matching_skills DESC
-    //       LIMIT 10;
-    //     `;
-    //         const [results] = await db.raw(query, [jobId]);
-    //         return results;
-    //     } catch (error) {
-    //         console.error("Error fetching matching users:", error);
-    //         throw error;
-    //     }
-    // },
-   
+    return results;
+  } catch (error) {
+    console.error("Error fetching matching users:", error);
+    throw error;
+  }
+},
+getJobDetails: async (jobId = null) => {
+  try {
+    const query = db("job_ads as ja")
+      .join("users as u", "ja.user_id", "u.id") // Join users table on user_id
+      .leftJoin("job_skills as js", "ja.id", "js.job_id") // Join job_skills table on job_id
+      .leftJoin("skills as s", "js.skills_id", "s.id") // Join skills table on skills_id
+      .leftJoin("type_users as tu", "ja.type_id", "tu.id") // Join type_users table on type_id
+      .select(
+        "ja.id as job_id",
+        "ja.job_title",
+        "ja.job_company",
+        "ja.job_url",
+        "ja.created_date",
+        "ja.deadline",
+        "ja.description",
+        "u.first_name",
+        "u.last_name",
+        "u.gender",
+        "u.phone_number",
+        "u.email",
+        "tu.type",
+        db.raw("json_agg(s.skill_name) as required_skills") // Aggregate skills into a JSON array
+      )
+      .groupBy("ja.id", "u.id", "tu.id"); // Group by job_ads, users, and type_users IDs
+
+    // If jobId is provided, add a WHERE clause to filter by job ID
+    if (jobId) {
+      query.where("ja.id", jobId);
+    }
+
+    const results = await query;
+    return jobId ? results[0] : results; // Return a single job if jobId is provided, else return all jobs
+  } catch (error) {
+    console.error("Error fetching job details:", error);
+    throw error;
+  }
+},
+//    getJobById: async (jobId) => {
+//   try {
+//     const job = await db("job_ads")
+//       .where("id", jobId)
+//       .first();
+//     return job;
+//   } catch (error) {
+//     console.error("Error fetching job details:", error);
+//     throw error;
+//   }
+// },
+
 }

@@ -3,6 +3,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Register_2 from "./components/Register_2";
 import Dashboard from "./components/Dashboard";
+import Dashboard_2 from "./components/Dashboard_2";
 import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./components/HomePage";
 import "./App.css";
@@ -32,16 +33,17 @@ const App: React.FC = () => {
           path="/job-ads" element={
             <ProtectedRoute>
               <JobAds />
-            </ProtectedRoute>
-          }
-        />
+            </ProtectedRoute>}/>
         <Route
           path="/all-job-ads" element={
             <ProtectedRoute>
               <AllJobsAd />
-            </ProtectedRoute>
-          }
-        />
+            </ProtectedRoute>} />
+        <Route
+          path="/dashboard_2" element={
+            <ProtectedRoute>
+              <Dashboard_2 />
+            </ProtectedRoute>} />
       </Routes>
     </div>
   );
