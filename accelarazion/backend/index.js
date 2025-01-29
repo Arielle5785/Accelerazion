@@ -1,5 +1,6 @@
 const express = require("express");
 // const router = express.Router();
+const { sendEmail } = require("./features/emailService.js");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const allRouter = require("./routes/allRouter.js");
