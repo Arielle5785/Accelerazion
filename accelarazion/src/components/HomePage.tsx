@@ -6,9 +6,6 @@ import "../App.css"
 const HomePage: React.FC = () => {
   return (
     <>
-      {/* Navbar */}
-      <Navbar />
-
       {/* Welcome Section */}
       <div
         className="hero"

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 
+
 const formatDate = (dateString: string) => {
   return new Date(dateString).toISOString().split("T")[0];
 };
@@ -14,11 +15,11 @@ type TJobAds =
 
 const AllJobsAd: React.FC = () => {
   const { user } = useAuth();
-  console.log(user);
+  // console.log(user);
   const navigate = useNavigate();  
   const [jobsAds, setJobAds] = useState<TJobAds[]>([])
   const [selectedJobs, setSelectedJobs] = useState<number[]>([]);
-  console.log(jobsAds);
+  // console.log(jobsAds);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const AllJobsAd: React.FC = () => {
       try {
         const response = await axios.get(`${apiBaseUrl}/api/all-job-ads`);
         setJobAds(response.data);
-        console.log("response data alljobsads:", response.data);
+        // console.log("response data alljobsads:", response.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching job ads:", error);

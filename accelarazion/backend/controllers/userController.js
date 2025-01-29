@@ -226,8 +226,8 @@ module.exports = {
   addUserSkills: async (req, res) => {
     // const { userId, skillIds } = req.body;
        const { userId, skillIds } = req.body;
-    console.log("Request Body:(addUserSkills usercontroller)", req.body);
-    console.log("userid usercontroller.js:", userId, "skillsid:", skillIds)
+    // console.log("Request Body:(addUserSkills usercontroller)", req.body);
+    // console.log("userid usercontroller.js:", userId, "skillsid:", skillIds)
     if (!userId || !Array.isArray(skillIds)) {
       return res.status(400).json({ message: "Invalid data" });
     }

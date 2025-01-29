@@ -174,7 +174,7 @@ const JobAds: React.FC = () => {
         <div className="form-actions">
           <button type="submit">Save Job Ad</button>
           <button type="button" onClick={() => navigate("/all-job-ads")}>
-            Al jobs Ads
+            All jobs Ads
           </button>
         </div>
       </form>

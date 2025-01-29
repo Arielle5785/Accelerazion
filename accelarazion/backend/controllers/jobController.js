@@ -14,7 +14,7 @@ module.exports = {
       userType, // Aligned with the model
       skills,
     } = req.body;
-    console.log("Received Request Body(jobController.js):", req.body);
+    // console.log("Received Request Body(jobController.js):", req.body);
 
     if (
       !jobTitle ||
@@ -53,7 +53,7 @@ module.exports = {
 
   addJobSkills: async (req, res) => {
     const { jobId, skillIds } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
 
     if (!jobId || !Array.isArray(skillIds)) {
       return res.status(400).json({ message: "Invalid data" });
@@ -112,11 +112,11 @@ module.exports = {
     }
   },
     
-  sendEmail: async () => {async (req, res) => {
+  sendEmail: async (req, res) => {
     const { recipients, jobDetails } = req.body;
 
     try {
-      const recipientEmails = recipients.map((r) => r.user_email).join(", ");
+      const recipientEmails = recipients.join(", ");
       const subject = `Job Opportunity: ${jobDetails.job_title}`;
       const text = `Dear Candidate,
     
@@ -148,9 +148,6 @@ module.exports = {
     console.error("Error sending emails:", error);
     res.status(500).json({ message: "Failed to send emails." });
   }
-};
-
-  },
-    
+}    
 
 }

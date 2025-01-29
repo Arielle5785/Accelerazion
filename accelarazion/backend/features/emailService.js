@@ -5,7 +5,17 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER, // Your email address
     pass: process.env.EMAIL_PASS, // Your email password or app-specific password
-  },
+    },
+    logger: true, // Enable logging
+    debug: true, // Enable debugging
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("Email transporter verification failed:", error);
+  } else {
+    console.log("Server is ready to take messages:", success);
+  }
 });
 
 const sendEmail = async (to, subject, text, html) => {

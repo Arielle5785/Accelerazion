@@ -129,7 +129,7 @@ const Register: React.FC = () => {
         }
       );
       const { user } = responseRegister.data;
-      console.log("responseRegister", user);
+      // console.log("responseRegister", user);
       if (user) {
         try {
           const responseLogin = await axios.post(
