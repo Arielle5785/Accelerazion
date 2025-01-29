@@ -22,5 +22,6 @@ router.get("/all-job-ads", jobController.getAllJobAds);
 router.post("/job-skills", jobController.addJobSkills);
 router.get("/job/:jobid", jobController.getJobDetails);
 router.get("/job/:jobid/candidates", jobController.getMatchingUsers);
+router.post("/send-email", jobController.sendEmail);
 
 module.exports = router;

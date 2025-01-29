@@ -1,6 +1,7 @@
 const { db } = require('../db/db.js');
 const bcrypt = require("bcrypt");
-const userModelFunction = require("../models/userModel.js")
+const userModelFunction = require("../models/userModel.js");
+// const { sendEmail } = require('../controllers/jobController.js');
 
 module.exports = {
 
@@ -44,7 +45,6 @@ module.exports = {
         }
     },
   
-  
     addJobSkills: async (jobId, skillIds) => {
         const jobSkills = skillIds.map((skillId) => ({
             job_id: jobId,
@@ -52,7 +52,8 @@ module.exports = {
         }));
         await db("job_skills").insert(jobSkills);
     },
-  getAllJobAds: async () => {
+    
+    getAllJobAds: async () => {
   try {
     const jobAds = await db("job_ads as ja")
       .join("users as u", "ja.user_id", "u.id") // Join users table on user_id
@@ -83,7 +84,8 @@ module.exports = {
     throw error;
   }
     },  
-  getMatchingUsers: async (jobid) => {
+    
+    getMatchingUsers: async (jobid) => {
   try {
     const results = await db("users as u")
       .join("user_skills as us", "u.id", "us.user_id")
@@ -105,54 +107,45 @@ module.exports = {
     console.error("Error fetching matching users:", error);
     throw error;
   }
-},
-getJobDetails: async (jobId = null) => {
-  try {
-    const query = db("job_ads as ja")
-      .join("users as u", "ja.user_id", "u.id") // Join users table on user_id
-      .leftJoin("job_skills as js", "ja.id", "js.job_id") // Join job_skills table on job_id
-      .leftJoin("skills as s", "js.skills_id", "s.id") // Join skills table on skills_id
-      .leftJoin("type_users as tu", "ja.type_id", "tu.id") // Join type_users table on type_id
-      .select(
-        "ja.id as job_id",
-        "ja.job_title",
-        "ja.job_company",
-        "ja.job_url",
-        "ja.created_date",
-        "ja.deadline",
-        "ja.description",
-        "u.first_name",
-        "u.last_name",
-        "u.gender",
-        "u.phone_number",
-        "u.email",
-        "tu.type",
-        db.raw("json_agg(s.skill_name) as required_skills") // Aggregate skills into a JSON array
-      )
-      .groupBy("ja.id", "u.id", "tu.id"); // Group by job_ads, users, and type_users IDs
+    },
+    
+    getJobDetails: async (jobId = null) => {
+      try {
+        const query = db("job_ads as ja")
+          .join("users as u", "ja.user_id", "u.id") // Join users table on user_id
+          .leftJoin("job_skills as js", "ja.id", "js.job_id") // Join job_skills table on job_id
+          .leftJoin("skills as s", "js.skills_id", "s.id") // Join skills table on skills_id
+          .leftJoin("type_users as tu", "ja.type_id", "tu.id") // Join type_users table on type_id
+          .select(
+            "ja.id as job_id",
+            "ja.job_title",
+            "ja.job_company",
+            "ja.job_url",
+            "ja.created_date",
+            "ja.deadline",
+            "ja.description",
+            "u.first_name",
+            "u.last_name",
+            "u.gender",
+            "u.phone_number",
+            "u.email",
+            "tu.type",
+            db.raw("json_agg(s.skill_name) as required_skills") // Aggregate skills into a JSON array
+          )
+          .groupBy("ja.id", "u.id", "tu.id"); // Group by job_ads, users, and type_users IDs
 
-    // If jobId is provided, add a WHERE clause to filter by job ID
-    if (jobId) {
-      query.where("ja.id", jobId);
-    }
+        // If jobId is provided, add a WHERE clause to filter by job ID
+        if (jobId) {
+          query.where("ja.id", jobId);
+        }
 
-    const results = await query;
-    return jobId ? results[0] : results; // Return a single job if jobId is provided, else return all jobs
-  } catch (error) {
-    console.error("Error fetching job details:", error);
-    throw error;
-  }
-},
-//    getJobById: async (jobId) => {
-//   try {
-//     const job = await db("job_ads")
-//       .where("id", jobId)
-//       .first();
-//     return job;
-//   } catch (error) {
-//     console.error("Error fetching job details:", error);
-//     throw error;
-//   }
-// },
+        const results = await query;
+        return jobId ? results[0] : results; // Return a single job if jobId is provided, else return all jobs
+      } catch (error) {
+        console.error("Error fetching job details:", error);
+        throw error;
+      }
+    },
 
+  // sendEmail: async() = {},
 }
