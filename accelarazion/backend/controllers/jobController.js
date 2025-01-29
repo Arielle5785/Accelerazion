@@ -1,6 +1,6 @@
-const jobModel = require("../models/jobModels.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+// const jobModel = require("../models/jobModels.js");
+// const bcrypt = require("bcrypt");
+// const jwt = require("jsonwebtoken");
 const jobModels = require("../models/jobModels.js");
 require("dotenv").config();
 
@@ -70,15 +70,15 @@ module.exports = {
     }
   },
 
-  //   getAllJobAds: async (req, res) => {
-  //     try {
-  //       const jobAds = await jobModels.getAllJobAds();
-  //       res.status(200).json(jobAds);
-  //     } catch (error) {
-  //       console.error("Error fetching job ads:", error);
-  //       res.status(500).json({ message: "Internal server error" });
-  //     }
-  //   },
+    getAllJobAds: async (req, res) => {
+      try {
+        const jobAds = await jobModels.getAllJobAds();
+        res.status(200).json(jobAds);
+      } catch (error) {
+        console.error("Error fetching job ads:", error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    },
   //   getMatchingUsers: async (jobId) => {
   //   const query = `
   //     SELECT

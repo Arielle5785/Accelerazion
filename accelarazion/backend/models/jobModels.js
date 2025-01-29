@@ -9,7 +9,7 @@ module.exports = {
         try {
             // const skills = getSkills();
             // const user = getFullData();
-            console.log("Job Data for insert jobModels:", jobData);
+            // console.log("Job Data for insert jobModels:", jobData);
             const [job] = await trx("job_ads").insert(
                 {
                     job_title: jobData.jobTitle,
@@ -23,7 +23,8 @@ module.exports = {
                     
                 },
                 ["id"]
-            ); console.log("inserted job jobModels=>",job);
+            );
+            // console.log("inserted job jobModels=>", job);
             
   
             if (jobData.skills && Array.isArray(jobData.skills)) {
@@ -51,7 +52,38 @@ module.exports = {
         }));
         await db("job_skills").insert(jobSkills);
     },
-  
+  getAllJobAds: async () => {
+  try {
+    const jobAds = await db("job_ads as ja")
+      .join("users as u", "ja.user_id", "u.id") // Join users table on user_id
+      .leftJoin("job_skills as js", "ja.id", "js.job_id") // Join job_skills table on job_id
+      .leftJoin("skills as s", "js.skills_id", "s.id") // Join skills table on skills_id
+      .leftJoin("type_users as tu", "ja.type_id", "tu.id") // Join type_users table on type_id
+      .select(
+        "ja.id as job_id",
+        "ja.job_title",
+        "ja.job_company",
+        "ja.job_url",
+        "ja.created_date",
+        "ja.deadline",
+        "ja.description",
+        "u.first_name",
+        "u.last_name",
+        "u.gender",
+        "u.phone_number",
+        "u.email",
+        "tu.type",
+        db.raw("json_agg(s.skill_name) as required_skills") // Aggregate skills into a JSON array
+      )
+      .groupBy("ja.id", "u.id", "tu.id"); // Group by job_ads, users, and type_users IDs
+
+    return jobAds;
+  } catch (error) {
+    console.error("Error fetching job ads:", error);
+    throw error;
+  }
+}
+
     // getAllJobAds: async () => {
     //     try {
     //         const jobAds = await db("jobs_ad as j")

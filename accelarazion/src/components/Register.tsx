@@ -35,20 +35,25 @@ const Register: React.FC = () => {
     ],
   });
 
-  const [countries, setCountries] = useState<(string | number)[]>([]);
-  const [languages, setLanguages] = useState<(string | number)[]>([]);
-  const [languageLevels, setLanguageLevels] = useState<(string | number)[]>([]);
-  const [userTypes, setUserTypes] = useState<string[]>([]);
+  
+                   
+  const [countries, setCountries] = useState<{ id: string | number; country_name: string; phone_code: string }[]>([]);
+  const [languages, setLanguages] = useState<{ id: string | number; language_name: string }[]>([]);
+  const [languageLevels, setLanguageLevels] = useState<{ id: string | number; level: string }[]>([]);
+  const [userTypes, setUserTypes] = useState<{ id: string | number; type: string }[]>([]);
   const [error, setError] = useState<string>("");
+  // const [countries, setCountries] = useState<(string | number)[]>([]);
+  // const [languages, setLanguages] = useState<(string | number)[]>([]);
+  // const [languageLevels, setLanguageLevels] = useState<(string | number)[]>([]);
+  // const [userTypes, setUserTypes] = useState<string[]>([]);
+  
 
   // Fetch dropdown data
   const fetchDropdownData = async () => {
     try {
       const countriesResponse = await axios.get(`${apiBaseUrl}/api/countries`);
       const languagesResponse = await axios.get(`${apiBaseUrl}/api/languages`);
-      const levelsResponse = await axios.get(
-        `${apiBaseUrl}/api/languages-level`
-      );
+      const levelsResponse = await axios.get(`${apiBaseUrl}/api/languages-level`);
       const typesResponse = await axios.get(`${apiBaseUrl}/api/type-users`);
 
       setCountries(countriesResponse.data);
@@ -90,12 +95,8 @@ const Register: React.FC = () => {
     });
   };
 
-  const handleLanguageChange = (
-    index: number,
-    field: string,
-    value: string
-  ) => {
-    if (value === "-1") return;
+  const handleLanguageChange = (index: number,field: string,value: string) => {
+    if (value === "-1") return
     setFormData((prevFormData) => {
       // Create a copy of the languages array
       const updatedLanguages = [...prevFormData.languages];

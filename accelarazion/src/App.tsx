@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./components/HomePage";
 import "./App.css";
 import JobAds from "./components/JobAds";
+import AllJobsAd from "./components/AllJobsAd";
 
 const App: React.FC = () => {
   return (
@@ -23,16 +24,21 @@ const App: React.FC = () => {
 
         {/* Protected Dashboard */}
         <Route
-          path="/dashboard"
-          element={
+          path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>} />
         <Route
-          path="/job-ads"
-          element={
+          path="/job-ads" element={
             <ProtectedRoute>
               <JobAds />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/all-job-ads" element={
+            <ProtectedRoute>
+              <AllJobsAd />
             </ProtectedRoute>
           }
         />

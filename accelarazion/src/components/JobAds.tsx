@@ -173,8 +173,8 @@ const JobAds: React.FC = () => {
 
         <div className="form-actions">
           <button type="submit">Save Job Ad</button>
-          <button type="button" onClick={() => navigate("/")}>
-            Home
+          <button type="button" onClick={() => navigate("/all-job-ads")}>
+            Al jobs Ads
           </button>
         </div>
       </form>
