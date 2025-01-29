@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import backgroundImage from "../assets/Welcome_background.jpg";
 import "../App.css"
 
