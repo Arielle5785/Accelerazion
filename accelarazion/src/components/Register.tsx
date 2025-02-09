@@ -1,7 +1,7 @@
 import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
 import { useAuth } from "../auth/useAuth";
 
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
