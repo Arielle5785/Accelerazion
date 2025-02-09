@@ -106,7 +106,7 @@ const Register: React.FC = () => {
         [field]: value,
       };
       // Return the new form data with updated languages
-      console.log(updatedLanguages);
+      // console.log(updatedLanguages);
 
       return {
         ...prevFormData,
@@ -171,9 +171,9 @@ const Register: React.FC = () => {
   return (
     <div className='register-container'>
       {/* Logo at the Top */}
-      <div className='logo-container'>
+      {/* <div className='logo-container'>
         <img src={logo} alt='Accelerazion Logo' className='logo' />
-      </div>
+      </div> */}
 
       {/* Form */}
       {/* <div className="auth-form-container"> */}

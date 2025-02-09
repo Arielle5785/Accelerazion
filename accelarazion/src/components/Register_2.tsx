@@ -61,7 +61,7 @@ const Register_2 :React.FC = () => {
         skillIds: selectedSkills,
       };
 
-      console.log("Payload being sent:", payload);
+      // console.log("Payload being sent:", payload);
 
       // Send payload to backend
       await axios.post(`${apiBaseUrl}/api/register/skills`, payload, {
@@ -76,9 +76,9 @@ const Register_2 :React.FC = () => {
 
   return (
     <div className="skills-container">
-      <div className="logo-container">
+      {/* <div className="logo-container">
         <img src={logo} alt="Accelerazion Logo" className="logo" />
-      </div>
+      </div> */}
       <h2 className="form-title">Select Your Skills</h2>
       <div className="skills-grid">
         {skills ? (

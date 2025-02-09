@@ -14,7 +14,7 @@ import "./App.css";
 const App: React.FC = () => {
   return (
     <div className="app">
-     <Navbar />
+     <Navbar/>
       <Routes>
         {/* Home Page */}
         <Route path="/" element={<HomePage />} />

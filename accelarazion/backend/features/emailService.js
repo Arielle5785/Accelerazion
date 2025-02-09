@@ -1,14 +1,31 @@
 const nodemailer = require("nodemailer");
-
+require("dotenv").config()
 const transporter = nodemailer.createTransport({
-  service: "Gmail", // Replace with your email service (e.g., Outlook, Yahoo, etc.)
+  host: "smtp.gmail.com",
+  port: 465, // Use 465 for SSL or 587 for TLS
+  secure: true, // true for 465, false for 587
   auth: {
-    user: process.env.EMAIL_USER, // Your email address
-    pass: process.env.EMAIL_PASS, // Your email password or app-specific password
-    },
-    logger: true, // Enable logging
-    debug: true, // Enable debugging
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  logger: true, 
+  debug: true,
+  tls: {
+    rejectUnauthorized: false, 
+  },
 });
+// const transporter = nodemailer.createTransport({
+//   service: "Gmail", // Replace with your email service (e.g., Outlook, Yahoo, etc.)
+//   auth: {
+//     user: process.env.EMAIL_USER, // Your email address
+//     pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+//     },
+//     logger: true, // Enable logging
+//     debug: true, // Enable debugging
+//     tls: {
+//             rejectUnauthorized: false, // Ignore certificate errors
+//           },
+// });
 
 transporter.verify((error, success) => {
   if (error) {
@@ -38,3 +55,4 @@ const sendEmail = async (to, subject, text, html) => {
 };
 
 module.exports = { sendEmail };
+

@@ -91,7 +91,7 @@ module.exports = {
       }
 
       const { JWT_SECRET } = process.env;
-      console.log(user);
+      // console.log(user);
       // Generate a token
       const accessToken = jwt.sign(
         { userid: user.id, email: user.email, type:user.type_id },

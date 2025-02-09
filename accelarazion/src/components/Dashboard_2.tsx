@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../auth/useAuth";
-
+// require("dotenv").config()
 const apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL || "";
 const formatDate = (dateString: string) => {
   return new Date(dateString).toISOString().split("T")[0];

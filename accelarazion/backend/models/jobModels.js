@@ -147,5 +147,41 @@ module.exports = {
       }
     },
 
-  // sendEmail: async() = {},
+//   sendEmail: async (req, res) => {
+//     const { recipients, jobDetails } = req.body;
+//     console.log("recipients=>",recipients,"jobdetails=>",jobDetails)
+//     try {
+//       const recipientEmails = recipients.join(", ");
+//       const subject = `Job Opportunity: ${jobDetails.job_title}`;
+//       const text = `Dear Candidate,
+    
+//       You are being contacted regarding the job opportunity titled "${jobDetails.job_title}" at ${jobDetails.job_company}.
+//       Deadline: ${jobDetails.deadline}.
+//       Description: ${jobDetails.description}
+
+//       For more information, contact us:
+//       Email of the person who have posted the job : ${jobDetails.email}
+//       Phone: ${jobDetails.phone_number}
+//       First Name: ${jobDetails.first_name} - Last Name: ${jobDetails.last_name}
+
+//       Best regards,
+//       The Accelerazion Team`;
+
+//     const html = `
+//       <h1>Job Opportunity: ${jobDetails.job_title}</h1>
+//       <p><strong>Company:</strong> ${jobDetails.job_company}</p>
+//       <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
+//       <p><strong>Description:</strong> ${jobDetails.description}</p>
+//       <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
+//     `;
+
+//     // Send email using the emailService
+//     await sendEmail(recipientEmails, subject, text, html);
+
+//     res.status(200).json({ message: "Emails sent successfully!" });
+//   } catch (error) {
+//     console.error("Error sending emails:", error);
+//     res.status(500).json({ message: "Failed to send emails." });
+//   }
+// }    
 }

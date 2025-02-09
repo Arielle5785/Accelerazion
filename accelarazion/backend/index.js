@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const allRouter = require("./routes/allRouter.js");
 const path = require('path')
+require("dotenv").config();
 
 // const { db } = require("./config/db.js");
 
@@ -27,6 +28,7 @@ app.use(
 );
 
 app.use("/api", allRouter);
+
 
 
 
