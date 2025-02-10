@@ -52,7 +52,22 @@ const sendEmail = async (to, subject, text, html) => {
     console.error("Error sending email: ", error);
     throw error;
   }
-};
+  // Send an email
+  // const mailOptions = {
+  //     from: process.env.EMAIL_USER, // Sender address
+  //     to: 'arielle.benadi@gmail.com', // Receiver address
+  //     subject: 'Test Email', // Subject line
+  //     text: 'This is a test email from Nodemailer!', // Plain text body
+  // };
 
+  //         transporter.sendMail(mailOptions, (error, info) => {
+  //             if (error) {
+  //                 return console.error('Error sending email:', error);
+  //             }
+  //             console.log('Email sent:', info.response);
+  // });
+
+}
 module.exports = { sendEmail };
+
 

@@ -113,27 +113,15 @@ module.exports = {
   },
     
   sendEmail: async (req, res) => {
-  const { to, subject, text, html } = req.body;
-    // console.log("request body. jbController", req.body);
+    const { recipients, jobDetails } = req.body;
 
-  if (!to || !subject || !text) {
-    return res.status(400).json({ error: "Missing required fields" });
-  }
+    if (!recipients || recipients.length === 0 || !jobDetails) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
 
-  console.log("Attempting to send email to:", to);
-  console.log("Email subject:", subject);
-  console.log("Email text:", text);
+    console.log("Attempting to send email to:", recipients);
 
-  // try {
-  //   const response = await sendEmail(to, subject, text, html);
-  //   console.log("Email response:", response);
-  //   res.json({ message: "Email sent successfully", response });
-  // } catch (error) {
-  //   console.error("Error sending email:", error);
-  //   res.status(500).json({ error: "Failed to send email" });
-    // }
-  try {
-      const recipientEmails = recipients.join(", ");
+    try {
       const subject = `Job Opportunity: ${jobDetails.job_title}`;
       const text = `Dear Candidate,
 
@@ -142,9 +130,9 @@ module.exports = {
       Description: ${jobDetails.description}
 
       For more information, contact us:
-      Email of the person who posted the job: ${jobDetails.email}
+      Email: ${jobDetails.email}
       Phone: ${jobDetails.phone_number}
-      First Name: ${jobDetails.first_name} - Last Name: ${jobDetails.last_name}
+      Name: ${jobDetails.first_name} ${jobDetails.last_name}
 
       Best regards,
       The Accelerazion Team`;
@@ -157,15 +145,69 @@ module.exports = {
         <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
       `;
 
-      // Call sendEmail function
-      await sendEmail(recipientEmails, subject, text, html);
+      // Call sendEmail from emailService.js
+      await sendEmail(recipients.join(","), subject, text, html);
 
       res.status(200).json({ message: "Emails sent successfully!" });
     } catch (error) {
       console.error("Error sending emails:", error);
       res.status(500).json({ message: "Failed to send emails." });
     }
-    
-},
-
+  },
 }
+
+//   sendEmail: async (req, res) => {
+//   const { to, subject, text, html } = req.body;
+//     // console.log("request body. jbController", req.body);
+
+//   if (!to || !subject || !text) {
+//     return res.status(400).json({ error: "Missing required fields" });
+//   }
+
+//   console.log("Attempting to send email to:", to);
+//   console.log("Email subject:", subject);
+//   console.log("Email text:", text);
+
+//   // try {
+//   //   const response = await sendEmail(to, subject, text, html);
+//   //   console.log("Email response:", response);
+//   //   res.json({ message: "Email sent successfully", response });
+//   // } catch (error) {
+//   //   console.error("Error sending email:", error);
+//   //   res.status(500).json({ error: "Failed to send email" });
+//     // }
+//   try {
+//       const recipientEmails = recipients.join(", ");
+//       const subject = `Job Opportunity: ${jobDetails.job_title}`;
+//       const text = `Dear Candidate,
+
+//       You are being contacted regarding the job opportunity titled "${jobDetails.job_title}" at ${jobDetails.job_company}.
+//       Deadline: ${jobDetails.deadline}.
+//       Description: ${jobDetails.description}
+
+//       For more information, contact us:
+//       Email of the person who posted the job: ${jobDetails.email}
+//       Phone: ${jobDetails.phone_number}
+//       First Name: ${jobDetails.first_name} - Last Name: ${jobDetails.last_name}
+
+//       Best regards,
+//       The Accelerazion Team`;
+
+//       const html = `
+//         <h1>Job Opportunity: ${jobDetails.job_title}</h1>
+//         <p><strong>Company:</strong> ${jobDetails.job_company}</p>
+//         <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
+//         <p><strong>Description:</strong> ${jobDetails.description}</p>
+//         <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
+//       `;
+
+//       // Call sendEmail function
+//       await sendEmail(recipientEmails, subject, text, html);
+
+//       res.status(200).json({ message: "Emails sent successfully!" });
+//     } catch (error) {
+//       console.error("Error sending emails:", error);
+//       res.status(500).json({ message: "Failed to send emails." });
+//     }
+    
+// },

@@ -113,6 +113,7 @@ const Dashboard_2: React.FC = () => {
       jobDetails, // Job details
       recipients: recipientEmails, // Candidate emails
     });
+    
     alert("Emails sent successfully!");
   } catch (error) {
     console.error("Error sending emails:", error);
