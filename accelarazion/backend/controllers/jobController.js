@@ -164,13 +164,13 @@ module.exports = {
       Best regards,
       The Accelerazion Team`;
 
-      //   const html = `
-      //   <h1>Job Opportunity: ${jobDetails.job_title}</h1>
-      //   <p><strong>Company:</strong> ${jobDetails.job_company}</p>
-      //   <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
-      //   <p><strong>Description:</strong> ${jobDetails.description}</p>
-      //   <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
-      // `;
+        const html = `
+        <h1>Job Opportunity: ${jobDetails.job_title}</h1>
+        <p><strong>Company:</strong> ${jobDetails.job_company}</p>
+        <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
+        <p><strong>Description:</strong> ${jobDetails.description}</p>
+        <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
+      `;
 
         // Call sendEmail from emailService.js
         await sendEmail(recipients.join(","), subject, text, html);
