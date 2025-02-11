@@ -106,14 +106,15 @@ const Dashboard_2: React.FC = () => {
   const sendEmail = async () => {
     if (!jobDetails) return;
     const recipientEmails = selectedCandidates.map((c) => c.user_email); // Use candidate emails
-  console.log("Sending email to:", recipientEmails);
+    console.log("Sending email to:", recipientEmails);
 
-  try {
-    await axios.post(`${apiBaseUrl}/send-email`, {
+    try {
+      console.log("inserted to try in Dashboard_2.sendEmail");
+    
+      await axios.post(`${apiBaseUrl}/api/send-email`, {
       jobDetails, // Job details
       recipients: recipientEmails, // Candidate emails
     });
-    
     alert("Emails sent successfully!");
   } catch (error) {
     console.error("Error sending emails:", error);

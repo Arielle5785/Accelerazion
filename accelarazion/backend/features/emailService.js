@@ -36,6 +36,8 @@ transporter.verify((error, success) => {
 });
 
 const sendEmail = async (to, subject, text, html) => {
+  console.log("send email from emailService.senEmail", to, subject, text, html);
+  
   try {
     const mailOptions = {
       from: process.env.EMAIL_USER, // Sender address
@@ -57,7 +59,8 @@ const sendEmail = async (to, subject, text, html) => {
   //     from: process.env.EMAIL_USER, // Sender address
   //     to: 'arielle.benadi@gmail.com', // Receiver address
   //     subject: 'Test Email', // Subject line
-  //     text: 'This is a test email from Nodemailer!', // Plain text body
+  //     // text: 'This is a test email from Nodemailer!',
+  //     html: 'This is a test email from Nodemailer!'
   // };
 
   //         transporter.sendMail(mailOptions, (error, info) => {
