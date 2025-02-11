@@ -171,7 +171,7 @@ main {
 
 /* Form Group */
 .form-group {
-  flex: 1 1 calc(33%- 1rem);
+  flex: 1 1 calc(33% - 1rem);
   min-width: 150px;
   display: grid;
   flex-direction: row;
