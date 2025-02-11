@@ -44,7 +44,7 @@ const sendEmail = async (to, subject, text, html) => {
       to, // List of receivers (can be a single email or an array)
       subject, // Subject line
       text, // Plain text body
-      html, // HTML body
+      // html, // HTML body
     };
 
     const info = await transporter.sendMail(mailOptions);

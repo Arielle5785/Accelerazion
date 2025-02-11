@@ -3,30 +3,6 @@ const { sendEmail } = require("../features/emailService.js")
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 465, // Use 465 for SSL or 587 for TLS
-//   secure: true, // true for 465, false for 587
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-//   logger: true, 
-//   debug: true,
-//   tls: {
-//     rejectUnauthorized: false, 
-//   },
-// });
-
-// transporter.verify((error, success) => {
-//   if (error) {
-//     console.error("Email transporter verification failed:", error);
-//   } else {
-//     console.log("Server is ready to take messages:", success);
-//   }
-// });
-
-
 module.exports = {
   createJobAd: async (req, res) => {
     const {
@@ -188,13 +164,13 @@ module.exports = {
       Best regards,
       The Accelerazion Team`;
 
-        const html = `
-        <h1>Job Opportunity: ${jobDetails.job_title}</h1>
-        <p><strong>Company:</strong> ${jobDetails.job_company}</p>
-        <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
-        <p><strong>Description:</strong> ${jobDetails.description}</p>
-        <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
-      `;
+      //   const html = `
+      //   <h1>Job Opportunity: ${jobDetails.job_title}</h1>
+      //   <p><strong>Company:</strong> ${jobDetails.job_company}</p>
+      //   <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
+      //   <p><strong>Description:</strong> ${jobDetails.description}</p>
+      //   <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
+      // `;
 
         // Call sendEmail from emailService.js
         await sendEmail(recipients.join(","), subject, text, html);
