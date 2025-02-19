@@ -150,27 +150,28 @@ module.exports = {
 
       try {
         const subject = `Job Opportunity: ${jobDetails.job_title}`;
-        const text = `Dear Candidate,
-
-      You are being contacted regarding the job opportunity titled "${jobDetails.job_title}" at ${jobDetails.job_company}.
-      Deadline: ${jobDetails.deadline}.
-      Description: ${jobDetails.description}
-
-      For more information, contact us:
-      Email: ${jobDetails.email}
-      Phone: ${jobDetails.phone_number}
-      Name: ${jobDetails.first_name} ${jobDetails.last_name}
-
-      Best regards,
-      The Accelerazion Team`;
-
         const html = `
-        <h1>Job Opportunity: ${jobDetails.job_title}</h1>
-        <p><strong>Company:</strong> ${jobDetails.job_company}</p>
-        <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
-        <p><strong>Description:</strong> ${jobDetails.description}</p>
-        <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
-      `;
+        <p>Dear Candidate,</p></br>
+
+      <p>You are being contacted regarding the job opportunity titled "${jobDetails.job_title}" at ${jobDetails.job_company}.</br>
+      Deadline: ${jobDetails.deadline}.</br>
+      Description: ${jobDetails.description}</br>
+
+      For more information, contact us:</br>
+      Email: ${jobDetails.email}</br>
+      Phone: ${jobDetails.phone_number}</br>
+      Name: ${jobDetails.first_name} ${jobDetails.last_name}</br></br>
+
+      Best regards,</br>
+      The Accelerazion Team</p>`;
+
+      //   const html = `
+      //   <h1>Job Opportunity: ${jobDetails.job_title}</h1>
+      //   <p><strong>Company:</strong> ${jobDetails.job_company}</p>
+      //   <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
+      //   <p><strong>Description:</strong> ${jobDetails.description}</p>
+      //   <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
+      // `;
 
         // Call sendEmail from emailService.js
         await sendEmail(recipients.join(","), subject, text, html);
