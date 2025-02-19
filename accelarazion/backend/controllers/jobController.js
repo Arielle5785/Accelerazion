@@ -167,15 +167,14 @@ module.exports = {
         const html = `
         <p>Dear Candidate,You are being contacted regarding the job opportunity titled "${jobDetails.job_title}" at ${jobDetails.job_company}.</p>
         <p><strong>Deadline:</strong> ${jobDetails.deadline}</p>
-        <p><strong>Description:</strong> ${jobDetails.description}</p>
-        <p><strong>Contact:</strong> ${jobDetails.email}, ${jobDetails.phone_number}</p>
-        <p>For more information, contact us:
-        Email: ${jobDetails.email}
-        Phone: ${jobDetails.phone_number}
-        Name: ${jobDetails.first_name} ${jobDetails.last_name}
-        <p></p>
-        Best regards,
-        The Accelerazion Team</p>`;
+        <p><strong>Job Description:</strong> ${jobDetails.description}</p>
+        
+        <p>For more information, contact the person who has posted the ad:</p>
+        <p>Email: ${jobDetails.email}</p>
+        <p>Phone: ${jobDetails.phone_number}</p>
+        <p>Name: ${jobDetails.first_name} ${jobDetails.last_name}</p>
+        <p>Best regards,</p>
+        <p>The Accelerazion Team</Email</p>`;
 
         // Call sendEmail from emailService.js
         await sendEmail(recipients.join(","), subject, text, html);
