@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import HomePage from "./components/HomePage";
 import JobAds from "./components/JobAds";
 import AllJobsAd from "./components/AllJobsAd";
+import Upload from "./components/Upload"
 import "./App.css";
 
 const App: React.FC = () => {
@@ -44,6 +45,11 @@ const App: React.FC = () => {
           path="/dashboard_2" element={
             <ProtectedRoute>
               <Dashboard_2 />
+            </ProtectedRoute>} />
+        <Route
+          path="/upload" element={
+            <ProtectedRoute>
+              <Upload />
             </ProtectedRoute>} />
       </Routes>
     </div>

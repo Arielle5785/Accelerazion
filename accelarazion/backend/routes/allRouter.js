@@ -1,10 +1,13 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController.js");
 const jobController = require("../controllers/jobController.js");
+const uploadController = require("../controllers/uploadController.js");
 const { verifyToken } = require("../middlewares/verifyToken.js");
-
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 const router = Router();
 // const router = express.Router();
+
 
 router.post("/register", userController.registerUser);
 router.get("/countries", userController.getCountries);
@@ -24,5 +27,6 @@ router.post("/job-skills", jobController.addJobSkills);
 router.get("/job/:jobid", jobController.getJobDetails);
 router.get("/job/:jobid/candidates", jobController.getMatchingUsers);
 router.post("/send-email", jobController.sendEmail);
+router.post("/upload", verifyToken, upload.single("file"), uploadController.upload);
 
 module.exports = router;
